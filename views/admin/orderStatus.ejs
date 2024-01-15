@@ -1,0 +1,119 @@
+
+
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"
+        integrity="sha512-ooSWpxJsiXe6t4+PPjCgYmVfr1NS5QXJACcR/FPpsdm6kqG1FmQ2SVyg2RXeVuCRBLr0lWHnWJP6Zs1Efvxzww=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.css"
+        integrity="sha512-+VDbDxc9zesADd49pfvz7CgsOl2xREI/7gnzcdyA9XjuTxLXrdpuz21VVIqc5HPfZji2CypSbxx1lgD7BgBK5g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" /> 
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- Add this in the <head> section -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <title>Document</title>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<link href="https://use.fontawesome.com/releases/v5.0.11/css/all.css" rel="stylesheet">
+</head>
+<body>
+   
+    <%- include('../partials/admin-header.ejs') %>
+
+
+
+<section class="container"style="margin-top:-28%;margin-left:23%;">
+    <div class="header d-flex justify-content-between">
+        <h3 class="h3 text-second fw-bold mb-3">Order Details</h3>
+    </div>
+
+    <form class="card px-3 py-3"style="background-color:#D3DBEE" action="/admin/changeStatus/<%= showOrder._id %>" method="post">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="form-control">Name</label>
+                <input type="text" value="<%= showOrder.user.name %>" class="form-control" readonly>
+            </div>
+            <div class="col-md-8">
+                <label for="form-control">Address</label>
+                <input type="text" value="<%= `${showOrder.address.address_user_name}, ${showOrder.address.house_name}(H), ${showOrder.address.town}, ${showOrder.address.state}, Pin:${showOrder.address.pincode}, PH:${showOrder.address.phone}` %>" class="form-control" readonly>
+            </div>
+            <div class="col-md-6">
+                <label for="form-control">Product Name</label>
+                <input type="text" value="<%= showOrder.product.name %>" class="form-control" readonly>
+            </div>
+            <div class="col-md-6">
+                <label for="form-control">Quantity</label>
+                <input type="text" value="<%= showOrder.items.quantity %>" class="form-control" readonly>
+            </div>
+            <div class="col-md-6">
+                <label for="form-control">Payment Method</label>
+                <input type="text" value="<%= showOrder.payment_method %>" class="form-control" readonly>
+            </div>
+            <div class="col-md-6">
+                <label for="form-control">Price</label>
+                <input type="hidden" name="product_id" value="<%= showOrder.items.product_id %>">
+                <input type="text" value="<%= showOrder.totalAmount %>" class="form-control" readonly>
+            </div>
+            <div class="col-md-6">
+                <label for="form-control">Status</label>
+                <% if (showOrder.items.cancelled_on) { %>
+                    <input type="text" value="<%= showOrder.items.status %>" class="form-control" readonly>
+                <% } %>
+                <% if (showOrder.items.pending) { %>
+                    <input type="text" value="<%= showOrder.items.status %>" class="form-control" readonly>
+                <% } else { %>
+                    <select name="status" class="form-select" id="">
+                        <% if (showOrder.items.confirmed) { %>
+                            <option value="Shipped">Shipped</option>
+                        <% } %>
+                        <% if (showOrder.items.shipped) { %>
+                            <option value="Out for Delivery">Out for Delivery</option>
+                        <% } %>
+                        <% if (showOrder.items.out_forDelivery) { %>
+                            <option value="Delivered">Delivered</option>
+                        <% } %>
+                    </select>
+                <% } %>
+            </div>
+
+            <% if (showOrder.items.cancelled_on) { %>
+                <div class="col-md-6">
+                    <a href="/admin/orders">
+                        <input type="none" value="back to orders" class="form-control mt-2 btn add-btn" readonly>
+                    </a>
+                </div>
+            <% } else if (showOrder.items.pending) { %>
+                <div class="col-md-6">
+                    <a href="/admin/orders">
+                        <input type="none" value="back to orders" class="form-control mt-2 btn add-btn" readonly>
+                    </a>
+                </div>
+            <% } else { %>
+                <div class="col-md-6">
+                    <label for="form-control"></label>
+                    <input type="submit" value="Update Status"style="background-color:aqua" class="form-control mt-2 btn add-btn">
+                </div>
+            <% } %>
+        </div>
+    </form>
+</section>
+
+</body>
+</html>

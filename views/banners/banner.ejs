@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- Add this in the <head> section -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <title>Document</title>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<link href="https://use.fontawesome.com/releases/v5.0.11/css/all.css" rel="stylesheet">
+</head>
+<body>
+   
+    <%- include('../partials/admin-header.ejs') %>
+<section class="category d-flex mt-2">
+    <div class="object-fit-contain " style="width: 60%;margin-top:-27%;margin-left: 25%;">
+        <div class="header d-flex justify-content-between">
+            <h3 class="h3 text-second fw-bold mb-3">Banners</h3>
+            <a href="/banner/new-banner" class="btn add-btn" style="height:40px;background-color: aqua;">New Banner</a>
+        </div>
+        <table style="width: 100rem;" id="example" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th class="th-sm">Image</th>
+                    <th class="th-sm">Name</th>
+                    <th class="th-sm">Reference</th>
+                    <th class="th-sm">Status </th>
+                    <th class="th-sm">Delete/Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% banners.forEach(function(banner) { %>
+                    <tr>
+                        <td><img class="mx-auto d-block" width="100rem" src="/banners/<%= banner.image.filename %>" alt=""></td>
+                        <td><%= banner.banner_name %></td>
+                        <td><a href="<%= banner.reference %>">Check Reference</a></td>
+                        <% if (banner.banner_status) { %>
+                            <td>List</td>
+                        <% } else { %>
+                            <td>Unlist</td>
+                        <% } %>
+                        <td>
+                            <!-- Edit banner button -->
+                            <a href="/banner/edit_banner/<%= banner._id %>" class="ms-3">
+                                <i class="fa-solid fa-pen"></i>
+                            </a>
+
+                            <!-- Delete banner button -->
+                            <a class="text-danger ms-2">
+                                <i style="cursor: pointer;" onclick="deleteBanner('<%= banner._id %>','<%= banner.image.filename %>')" class="fa-solid fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</section>
+<script>
+    const deleteBanner = (id, imageName) => {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                await fetch(`/banner/delete-banner?id=${id}&image=${imageName}`)
+                    .then(responses => responses.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            ).then(() => {
+                                location.assign('/banner');
+                            })
+                        }
+                    })
+            } catch (err) {
+                console.log(err)
+            }
+        }
+    })
+}
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</body>
+</html>
+
+<style>
+    .error {
+        color: rgb(255, 0, 0)
+    }
+
+    .crop-banner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 4;
+        width: 30rem;
+    }
+</style>

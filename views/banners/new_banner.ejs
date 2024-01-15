@@ -1,0 +1,226 @@
+
+
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"
+        integrity="sha512-ooSWpxJsiXe6t4+PPjCgYmVfr1NS5QXJACcR/FPpsdm6kqG1FmQ2SVyg2RXeVuCRBLr0lWHnWJP6Zs1Efvxzww=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.css"
+        integrity="sha512-+VDbDxc9zesADd49pfvz7CgsOl2xREI/7gnzcdyA9XjuTxLXrdpuz21VVIqc5HPfZji2CypSbxx1lgD7BgBK5g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" /> 
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- Add this in the <head> section -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <title>Document</title>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<link href="https://use.fontawesome.com/releases/v5.0.11/css/all.css" rel="stylesheet">
+</head>
+<body>
+   
+    <%- include('../partials/admin-header.ejs') %>
+
+    <div style="position:relative;margin-top: -27%;margin-left: 22%;background-color:rgba(211, 219, 238, 1)" class="container py-5 w mb-5 new-category">
+        <h3 class="mb-3 text-second fw-bold">New Banner</h3>
+        <form class="p-md-5 border rounded-3 bg-body-tertiary" id="new-banner">
+            <!-- Name input -->
+            <div class="err mb-3 text-danger"></div>
+            <div class="row mb-3">
+                <div class="form-group col-6">
+                    <label for="">Banner Name</label>
+                    <input type="text" class="form-control" name="banner_name">
+                </div>
+                <div class="form-group col-6">
+                    <label for="">Reference Link</label>
+                    <input type="text" id="start_date" class="form-control" name="reference">
+                </div>
+                <div class="form-group col-6">
+                    <div class="d-flex justify-content-between">
+                        <label for="">Banner Image</label>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <img id="banner_prev" class="border my-1 rounded" width="120rem" src="" alt="">
+                        </div>
+                    </div>
+                    <input id="banner_image" type="file" accept=".jpg,.jpeg,.png,.webp,.svg,.avif"
+                        class="form-control FilUploader" class="mb-3" required />
+                    <input id="cropped_banner" type="hidden" name="" value="">
+                </div>
+                <div class="form-group col-6">
+                    <label for="">Status</label>
+                    <select class="form-select" name="status" aria-label="Default select example">
+                        <option value="true">List</option>
+                        <option value="false">Unlist</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Submit button -->
+            <div class="button-grp">
+                <button type="submit" class="btn btn-lg add-btn px-5 bg-light">Submit</button>
+                <button type="reset" class="btn btn-lg clear-btn px-5">Clear</button>
+            </div>
+        </form>
+        <div style="display: none;" class="crop-banner card p-2 shadow " id="banner-crp-container">
+            <div class="d-flex flex-column">
+                <img src="" id="bannerIMG" style="object-fit: cover;">
+                <button id="cropImageBtn" class="btn btn-primary mt-3">Crop Image</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        // new-banner
+
+
+        $('#banner_image').on('change', (e) => {
+            let container = document.getElementById('banner-crp-container')
+            container.style.display = "block"
+            let image = document.getElementById('bannerIMG')
+            let file = e.target.files[0]
+            $('.button-grp').hide();
+            if (file) {
+                // Create a new FileReader to read the selected image file
+                var reader = new FileReader(file);
+                reader.onload = function (event) {
+                    // Set the source of the image element in the Cropper container
+                    document.getElementById('bannerIMG').src = event.target.result;
+                    // Initialize Cropper.js with the updated image source
+                    let cropper = new Cropper(image, {
+                        aspectRatio: 16 / 5,
+                        viewMode: 0,
+                        autoCrop: true,
+                        background: false,
+                    })
+
+                    $('#cropImageBtn').on('click', function () {
+                        var cropedImg = cropper.getCroppedCanvas()
+                        if (cropedImg) {
+                            cropedImg = cropedImg.toDataURL('image/png')
+                            document.getElementById('banner_prev').src = cropedImg
+                            document.getElementById('cropped_banner').value = cropedImg
+                            container.style.display = "none";
+                            document.getElementById('bannerIMG').src = "";
+                            $('.button-grp').show()
+                        }
+                        cropper.destroy();
+                    })
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+    <script>
+      
+            $('#new-banner').validate({
+    rules: {
+        banner_name: {
+            required: true,
+            maxlength: 20
+        },
+        banner_image: {
+            required: true
+        },
+        reference: {
+            required: true
+        }
+    },
+    submitHandler: function (form) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You want to add new Banner?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#0061bc",
+            cancelButtonColor: "rgb(128, 128, 128)",
+            confirmButtonText: "Yes",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const form = document.getElementById("new-banner");
+                try {
+                    const formData = new FormData(form);
+                    console.log(formData)
+                    const base64String = document.getElementById("cropped_banner").value;
+                    const base64Data = base64String.split(",")[1];
+                    const binaryData = atob(base64Data);
+                    const uint8Array = new Uint8Array(
+                        binaryData.length
+                    );
+                    for (let i = 0; i < binaryData.length; i++) {
+                        uint8Array[i] = binaryData.charCodeAt(i);
+                    }
+                    const blob = new Blob([uint8Array], {
+                        type: "image/png",
+                    });
+                    const file = new File([blob], "image.png", {
+                        type: "image/png",
+                    });
+                    formData.append("banner_image", file);
+                    console.log(formData)
+                    let res = await fetch(
+                        "/banner/create-banner",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+                    let data = await res.json();
+                    if (data.success) {
+                        Swal.fire(
+                            "Created!",
+                            "New banner has been created successfully.",
+                            "success"
+                        ).then(() =>
+                            location.assign("/banner")
+                        );
+                    } else {
+                        throw new Error(data.message);
+                    }
+                } catch (e) {
+                    Swal.fire("Error!", e.message, "error");
+                }
+            }
+        });
+    }
+})
+    </script>
+</body>
+
+</html>
+
+<style>
+    .error {
+        color: rgb(255, 0, 0)
+    }
+
+    .crop-banner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 4;
+        width: 30rem;
+    }
+</style>

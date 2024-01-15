@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <title>Product Detail Page</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+
+  <!-- Your other HTML head content -->
+  
+  <!-- Include SweetAlert JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <!-- Add these lines in the head section of your HTML file -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+      <title>Document</title>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+      <!-- Add these lines in the head section of your HTML file -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+      
+      <!-- Add these lines in the head section of your HTML file -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+          crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+          
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+        <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+      
+      
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+          integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+          crossorigin="anonymous"></script>
+      
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+          <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+          
+      
+      
+          <title>Document</title>
+      </head>
+      <body>
+          
+      
+      
+      
+        <style>
+       
+      .button-cancel {
+      background-color: var(--background) !important;
+      }
+      
+      .add-btn {
+      background-color: var(--text-color) !important;
+      color: var(--white) !important;
+      cursor: pointer !important;
+      }
+      .text-second {
+      color: var(--text-color) !important;
+      }
+      
+      .ladels a {
+      text-decoration: none;
+      color: var(--text-color);
+      }
+      .search a {
+      color: var(--text-color);
+      font-size: 1.5rem;
+      }
+      
+      
+      .user-nav {
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      background-color: var(--white);
+      }
+      .search-box {
+      background-color: var(--background);
+      border-radius: 5px;
+      width: 20rem;
+      border: none;
+      padding: 5px;
+      outline: var(--text-color);
+      }
+      .prof-div {
+      z-index: 6;
+      right: 4.5rem;
+      top: 3rem;
+      }
+      .account,
+      .account a {
+      background: var(--user-backhround);
+      color: var(--white) !important;
+      text-decoration: none !important;
+      }
+      
+      .image-container {
+      width: 500px;
+      height: 500px;
+      position: relative;
+      overflow: hidden;
+      }
+      #primary-img-view {
+      width: fit-content;
+      min-width: 200px;
+      position: absolute;
+      left: 50%;
+      right: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      }
+      .add-to-wish-list-btn {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      font-size: 25px;
+      z-index: 2;
+      }
+      .wallet-history {
+      max-height: 170px;
+      overflow-y: scroll;
+      padding: 10px;
+      }
+      .wallet-history::-webkit-scrollbar {
+      width: 7px;
+      background-color: rgb(173, 173, 173);
+      border-radius: 10px;
+      }
+      .wallet-history::-webkit-scrollbar-thumb {
+      background: #2d6b5e;
+      border-radius: 10px;
+      }
+      </style>
+          
+
+      
+<%- include('../partials/user-header.ejs') %>
+
+
+
+        <!-- Jumbotron -->
+      
+        <!-- Heading -->
+        
+ 
+      
+      <!-- content -->
+      <section class="py-5 mt-4">
+        <div class="container">
+          <div class="row gx-5">
+            <aside class="col-lg-6">
+             
+              </div>
+             
+              <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                  <% for (let i = 0; i < product.productImages.length; i++) { %>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="<%= i %>" <%= i === 0 ? 'class="active"' : '' %>></li>
+                  <% } %>
+                </ol>
+                <div class="carousel-inner">
+                  <% for (let i = 0; i < product.productImages.length; i++) { %>
+                    <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+                      <img class="d-block w-100 zoomable-image" src="/images/product/<%= product.productImages[i] %>" alt="<%= product.name %> Image" style="border-radius: 8px;height:500px;object-fit: contain">
+                    </div>
+                  <% } %>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </div>
+              
+            
+              
+              <!-- thumbs-wrap.// -->
+              <!-- gallery-wrap .end// -->
+            </aside>
+            <main class="col-lg-6">
+              <div class="ps-lg-3">
+                <h4 class="title text-dark">
+                    <%= product.name %>
+                </h4>
+                <div class="d-flex flex-row my-3">
+                  <div class="text-warning mb-1 me-2">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <span class="ms-1">
+                      4.5
+                    </span>
+                  </div>
+                  <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i><%=product.stock%></span>
+                  <span class="text-success ms-2">In stock</span>
+                </div>
+                <div class="mb-3">
+                  <% if (discountedPrice !== null) { %>
+                    <span class="h5" style="text-decoration: line-through;">Original Price: ₹<span id="originalPrice"><%= product.price.toFixed(2) %></span></span></br>
+                    <span class="h5 text-danger">
+                      <span style="font-size: 1.2em;">Special Offer:</span>
+                      ₹<span id="offerPrice" style="font-size: 1.5em; font-weight: bold;"><%= discountedPrice.toFixed(2) %></span>
+                      <span style="font-size: 1em;">You got <%= discount %>% off</span> <!-- Display discount percentage -->
+                      <div style="font-size: 0.8em; color: #666; margin-top: 5px;">
+                        Valid from <%= offerStartDate.toLocaleString() %> <br>to <%= offerEndDate.toLocaleString() %>
+                      </div>
+                    </span>
+                    
+                    
+                    
+                    
+                  <% } else { %>
+                    <span class="h5">Original Price: ₹<span id="originalPrice"><%= product.price.toFixed(2) %></span></span>
+                  <% } %>
+                </div>
+                
+                
+                
+               
+                
+                
+      
+                <div style="font-size: 18px;font-weight: bold; color: #333; font-family: 'Arial', sans-serif; line-height: 1.5;">
+                  <p>Description:
+                      <%= product.description %>
+                  </p>
+              </div>
+              
+      
+                <div class="row">
+                  <dt class="col-3">Category:</dt>
+                  <dd class="col-9"><%=product.category.name%></dd>
+      
+                  <dt class="col-3">Color</dt>
+                  <dd class="col-9">Brown</dd>
+      
+                  <dt class="col-3">Material</dt>
+                  <dd class="col-9">Cotton, Jeans</dd>
+      
+                  <dt class="col-3">Brand</dt>
+                  <dd class="col-9">Reebook</dd>
+                </div>
+      
+                <hr />
+      
+                
+ <!-- Add this code to your product details page (prod-details.ejs) -->
+ 
+
+
+  
+
+
+                <!-- Example Add to Cart button in your product details page -->
+                <!-- Assuming productId is dynamically generated in your EJS template -->
+                <form action="/cart/add-to-cart/<%= user._id %>/<%= productId %>" method="post">
+                  <!-- Include any additional form fields as needed -->
+                  
+                  <div class="d-flex justify-content">
+                    <button type="submit" class="btn btn-success">Add to Cart</button>
+                    <button type="submit" class="btn btn-primary"style="margin-left:20px">Buy Now</button>
+                </div>
+                </form>
+            </main>
+          </div>
+        </div>
+      </section>
+      <!-- content -->
+      
+      
+</body>
+</html>
+
+<style>
+    .icon-hover:hover {
+  border-color: #3b71ca !important;
+  background-color: white !important;
+  color: #3b71ca !important;
+}
+
+.icon-hover:hover i {
+  color: #3b71ca !important;
+}
+.image-container {
+    overflow: hidden;
+    position: relative;
+}
+
+.zoomable-image {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+.zoomable-image:hover {
+    transform: scale(1.2); /* Adjust the scale factor for the desired zoom level */
+}
+
+  /* Custom styles for the Next and Previous controls */
+  .carousel-control-prev, .carousel-control-next {
+    color: black; 
+    font-weight: bold;/* Change this to your desired color */
+  }
+
+
+</style>
+<!-- <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-fslightbox]').fslightbox();
+  });
+</script> -->
+
+
+<style>
+  button {
+            background-color: Blue; /* Green */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+</style>

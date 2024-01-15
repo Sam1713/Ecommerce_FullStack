@@ -1,0 +1,196 @@
+
+                   <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- Add this in the <head> section -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <title>Document</title>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<link href="https://use.fontawesome.com/releases/v5.0.11/css/all.css" rel="stylesheet">
+</head>
+<body>
+    <%- include('../partials/admin-header.ejs') %>
+
+
+    
+
+
+    <div class="container py-5 w mb-5 new-category" style="margin-top: -32%;margin-left: 20%;">
+
+        <h3 class="mb-3 text-second fw-bold">New Coupon</h3>
+        <form class="p-md-5 border rounded-3 bg-body-tertiary" id="new-coupon"style="background-color:rgba(211, 219, 238, 1)">
+
+            <!-- Name input -->
+            <div class="err mb-3 text-danger"></div>
+            <div class="row mb-3">
+                <div class="form-group col-6">
+                    <label for="">Coupon Code</label>
+                    <input type="text" class="form-control" name="coupon_code">
+                </div>
+                <div class="form-group col-6">
+                    <label for="">Discount</label>
+                    <input type="number" class="form-control" name="discount">
+                </div>
+                <div class="form-group col-6">
+                    <label for="">Starting Date</label>
+                    <input type="date" id="start_date" class="form-control" name="start_date">
+                </div>
+                <div class="form-group col-6">
+                    <label for="">Exp. Date</label>
+                    <input type="date" id="exp_date" class="form-control" name="exp_date">
+                </div>
+                <div class="form-group col-6">
+                    <label for="">Maximum Count</label>
+                    <input type="text" class="form-control" name="max_count">
+                </div>
+                <div class="form-group col-6">
+                    <label for="">Minimum Amount</label>
+                    <input type="number" class="form-control" name="min_amount">
+                </div>
+            </div>
+
+            <!-- Description input -->
+            <div class="form-floating mb-3">
+                <textarea class="form-control text-area" id="exampleFormControlTextarea1" name="discription"
+                    rows="3"></textarea>
+                <label class="form-label" for="form4Example3">Description</label>
+            </div>
+
+         <!-- Submit button -->
+<button type="submit" class="btn btn-lg add-btn px-5" style="background-color: white;">Submit</button>
+
+<style>
+  .btn.btn-lg:hover {
+    background-color: yellow;
+    color: black; /* Adjust the text color for better visibility */
+  }
+</style>
+
+            <button type="reset" class="btn btn-lg clear-btn px-5">Clear</button>
+
+        </form>
+
+    </div>
+  
+      <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    </script>
+
+    <script>
+        // Get the current date in "YYYY-MM-DD" format
+        const currentDate = new Date().toISOString().split('T')[0];
+
+        // Set the minimum date for the input element to the current date
+        document.getElementById('exp_date').setAttribute('min', currentDate);
+        document.getElementById('start_date').setAttribute('min', currentDate);
+
+        $.validator.addMethod(
+            "positive",
+            function (value, element) {
+                return parseFloat(value) >= 0;
+            },
+            "Please enter a positive number"
+        );
+
+        $.validator.addMethod(
+            "lessThan100",
+            function (value, element) {
+                return parseFloat(value) <= 100;
+            },
+            "Please enter a percentage value."
+        );
+
+        $("#new-coupon").validate({
+            rules: {
+                coupon_code: {
+                    required: true,
+                    maxlength: 80,
+                },
+                discount: {
+                    required: true,
+                    positive: true,
+                    lessThan100: true
+                },
+                start_date: {
+                    required: true,
+                },
+                exp_date: {
+                    required: true,
+                },
+                min_amount: {
+                    required: true,
+                    number: true,
+                    positive: true,
+                },
+                max_count: {
+                    required: true,
+                    number: true,
+                    positive: true,
+                },
+                discription: {
+                    required: true
+                }
+            },
+
+            submitHandler: function (form) {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "are you sure want to create coupen",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#0061bc",
+                    cancelButtonColor: "rgb(128, 128, 128)",
+                    confirmButtonText: "Yes",
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        console.log("confirmed");
+                        const form = document.getElementById("new-coupon");
+                        const formData = new FormData(form);
+                        const payload = Object.fromEntries(formData);
+                        console.log(payload)
+                        await fetch('/coupen/create-coupen', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        }).then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire(
+                                        'Created!',
+                                        'New Coupen has been created.',
+                                        'success'
+                                    ).then(() => {
+                                        location.assign('/coupen');
+                                    })
+                                }
+                            })
+
+                    }
+                });
+            }
+        })
+
+    </script>
+
+
+</body>
+
+</html>

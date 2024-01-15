@@ -1,0 +1,24 @@
+<!-- admin/users.ejs -->
+
+<h2>User List</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>User Name</th>
+      <!-- Add more user details as needed -->
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% users.forEach(user => { %>
+      <tr>
+        <td><%= user.name %></td>
+        <!-- Display other user details as needed -->
+        <td>
+            <td><a href="/admin/orders/<%= user._id %>"><%= user.name %></a></td>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>

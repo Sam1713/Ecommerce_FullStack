@@ -1,0 +1,198 @@
+<nav id="navbar" class="navbar navbar-expand-lg ">
+    <style>
+        .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color:#607d8b;
+  /* Additional styling */
+  padding: 4px;
+  z-index: 1000; /* Ensure the navbar is above other elements */
+}
+
+    </style>
+    <style>
+        :root {
+--background: aqua;
+--text-color: aqua;
+--white: rgb(106, 243, 143);
+--user-backhround: rgba(107, 199, 171, 1);
+}
+
+.blue-secondary {
+color:aqua;
+font-size: 1.2rem;
+font-family: Roboto;
+}
+    </style>
+    <script>
+            
+        $(document).ready(function () {
+          $("#btnn").click(function () {
+            $("#prof-div").toggle();
+          });
+        });
+      
+      </script>
+  <div class="container-fluid">
+      <a class="navbar-brand" href="/home">
+          <img style="width: 3rem;border-radius: 50%;" src="/images/logo/OIP (4).jpg" alt="">
+      </a>
+
+      <!-- Toggle button for small screens -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navigation links -->
+      <div class="collapse navbar-collapse" id="navbarNav"style="margin-left:20px;padding-left:10%">
+          <section class="navbar-nav mr-auto">
+              <!-- Your existing navigation links -->
+              <div style="width: 25rem;" class="ladels d-flex justify-content-between align-items-center fw-bold">
+                  <a class="nav-link"style="margin-left:17%" href="/prod">All Products</a>
+                  <a class="nav-link" href="/home">Home</a>
+                  <a class="nav-link" href="/wallet">Wallet</a>
+              </div>
+          </section>
+          
+          <!-- Search form -->
+          <div style="padding-right: 30px;">
+              <!-- <form class="form-inline my-2 my-lg-0">
+                <a id="" style="width: 2rem;" href="/products/search">
+                  <i class="fa-brands fa-searchengin" style="font-size: 24px;color: aqua;"></i>
+              </a>
+              
+                  <input id="searchInput" class="form-control mr-sm-2" type="search" placeholder="Search"
+                      aria-label="Search">
+              </form> -->
+              <% if (isHomePage) { %>
+                <form action="/products/search" method="GET" class="form-inline my-2 my-lg-0">
+                  <a id="" href="/products/search" style="width: 2rem;">
+                    <i class="fa-brands fa-searchengin" style="font-size: 24px; color: aqua;"></i>
+                  </a>
+                  <input id="searchInput" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query">
+                  <button class="btn btn-warning" type="submit"><i class="bi bi-search"></i> Search</button>
+                </form>
+              <% } %>
+              
+            </div>
+            
+
+          <!-- User-related links -->
+          <div style="width:9rem;font-size:1.5rem;display: flex;margin-right: 40px;" class="ladels fw-bold">
+              <a class="nav-link" href="/cart/cart"><i class="fa-solid fa-cart-shopping ml-2"><span
+                          style="font-size: 0.8rem;" id="cartCount"
+                          class="badge bg-success text-white h6 badge-pill"></span></i></a>
+
+              <!-- My Account dropdown -->
+              <div class="dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" id="myAccountDropdown" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
+                      <i id="#userIcon" class="fa-solid ml-2 fa-user"></i>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="myAccountDropdown">
+                      <a class="dropdown-item" href="/user-profile">My Account</a>
+                      <a class="dropdown-item" href="/cart/cart">My Cart</a>
+                      <a class="dropdown-item" href="/order">Order history</a>
+                      <div class="dropdown-divider"></div>
+                      <form method="GET" action="/logout">
+                          <button type="submit" class="dropdown-item">Logout</button>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</nav>
+<style>
+    
+  .button-cancel {
+  background-color: var(--background) !important;
+  }
+  
+  .add-btn {
+  background-color: var(--text-color) !important;
+  color: var(--white) !important;
+  cursor: pointer !important;
+  }
+  .text-second {
+  color: var(--text-color) !important;
+  }
+  
+  .ladels a {
+  text-decoration: none;
+  color: var(--text-color);
+  }
+  .search a {
+  color: var(--text-color);
+  font-size: 1.5rem;
+  }
+  
+  
+  .user-nav {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background-color: var(--white);
+  }
+  .search-box {
+  background-color: var(--background);
+  border-radius: 5px;
+  width: 20rem;
+  border: none;
+  padding: 5px;
+  outline: var(--text-color);
+  }
+  .prof-div {
+  z-index: 6;
+  right: 4.5rem;
+  top: 3rem;
+  }
+  .account,
+  .account a {
+  background: var(--user-backhround);
+  color: var(--white) !important;
+  text-decoration: none !important;
+  }
+  
+  .image-container {
+  width: 500px;
+  height: 500px;
+  position: relative;
+  overflow: hidden;
+  }
+  #primary-img-view {
+  width: fit-content;
+  min-width: 200px;
+  position: absolute;
+  left: 50%;
+  right: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  }
+  .add-to-wish-list-btn {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-size: 25px;
+  z-index: 2;
+  }
+  .wallet-history {
+  max-height: 170px;
+  overflow-y: scroll;
+  padding: 10px;
+  }
+  .wallet-history::-webkit-scrollbar {
+  width: 7px;
+  background-color: rgb(173, 173, 173);
+  border-radius: 10px;
+  }
+  .wallet-history::-webkit-scrollbar-thumb {
+  background: #2d6b5e;
+  border-radius: 10px;
+  }
+  </style>
+  

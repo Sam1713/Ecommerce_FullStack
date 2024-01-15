@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- Add this in the <head> section -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <title>Document</title>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<link href="https://use.fontawesome.com/releases/v5.0.11/css/all.css" rel="stylesheet">
+</head>
+<body>
+   
+    <%- include('../partials/admin-header.ejs') %>
+
+    <section class="category d-flex"style="margin-top: -28%">
+        <div class="object-fit-contain mt-2 " style="width: 68%;margin-left: 20%;">
+            <div class="header d-flex justify-content-between">
+                <h3 class="h3 text-second fw-bold mb-3">Coupens</h3>
+                <a href="/coupen/new-coupen" class="btn add-btn" style="height:40px;background-color: aqua;">New Coupon</a>
+            </div>
+            <table style="width: 100rem;" id="example" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th class="th-sm">Coupon Code</th>
+                        <th class="th-sm">Description</th>
+                        <th class="th-sm">Discount</th>
+                        <th class="th-sm">Start Date</th>
+                        <th class="th-sm">End Date</th>
+                        <th class="th-sm">Used Count</th>
+                        <th class="th-sm">Delete/Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% formattedCoupens.forEach(coupon => { %>
+                        <tr>
+                            <td><%= coupon.coupon_code %></td>
+                            <td><%= coupon.discription %></td>
+                            <td><%= coupon.discount %></td>
+                            <td><%= coupon.start_date %></td>
+                            <td><%= coupon.exp_date %></td>
+                            <td><%= coupon.used_count %></td>
+                            <td>
+                                <%# edit category button %>
+                                <a href="/coupen/edit_coupen/<%= coupon._id %>" class="ms-3"><i class="fa-solid fa-pen"></i></a>
+    
+                                <a class="text-danger ms-2">
+                                    <i style="cursor: pointer;" onclick="deleteCoupen('<%= coupon._id %>')" class="fa-solid fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <script>
+        
+        //delete coupen 
+        const deleteCoupen = (id) => {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "are you sure want to Delete this coupen",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#0061bc",
+                cancelButtonColor: "rgb(128, 128, 128)",
+                confirmButtonText: "Yes",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    await fetch(`/coupen/delete-coupen/${id}`, {
+                        method: 'GET'
+                    }).then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire(
+                                    'Editted!',
+                                    'The Coupen deleted successfully',
+                                    'success'
+                                ).then(() => {
+                                    location.assign('/coupen');
+                                })
+                            }
+                        })
+        
+                }
+            });
+        }
+            </script>
+            
+    
+</body>
+</html>
+
+
+<style>
+  :root{
+--background:rgba(211, 219, 238, 1);
+--buttonColor:#50a088;
+--textcolor: #0066B0;
+}
+.nav{
+background-color: var(--background)
+}
+
+.sidebar {
+width: 15rem;
+border-radius: 0.375rem;
+background: #FFF;
+box-shadow: 2px 2px 10px 2px rgba(124, 124, 124, 0.25);
+}
+
+.heading {
+width: 100%;
+height: 2.6875rem;
+border-radius: 0.375rem 0.375rem 0rem 0rem;
+background: #D3DBEE;
+}
+.user-btn{
+background-color: var(--buttonColor) !important;
+color: #FFF !important;
+cursor: pointer !important;
+}
+.clear-btn{
+background-color: var(--background) !important;
+cursor: pointer !important;
+}
+.user-text{
+color: var(--buttonColor) !important;
+font-family: roboto;
+font-size: 1.2rem;
+}
+.user-icon{
+color:var(--textcolor) !important ;
+}
+</style>

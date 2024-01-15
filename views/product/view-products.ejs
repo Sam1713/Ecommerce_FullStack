@@ -1,0 +1,306 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- Add this in the <head> section -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <title>Document</title>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<link href="https://use.fontawesome.com/releases/v5.0.11/css/all.css" rel="stylesheet">
+</head>
+<body>
+   
+  <%- include('../partials/admin-header.ejs') %>
+
+
+    
+
+       
+<div class="container-fluid " style="width:75%;margin-left: 20%;margin-top: -33%;">
+  <div class="container-fluid mt-4">
+    <section style="height: 90px;">
+      <div class="container mt-5">
+        <div class="row mt-5">
+          <a href="/products/add-product" class="btn btn-success mt-5 ml-auto">Add product</a>
+        </div>
+      </div>
+    </section>
+  
+    <div class="container">
+      <table class="table table-bordered table-responsive mt-4">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Category</th>
+            <th scope="col">Price</th>
+            <th scope="col">Description</th>
+            <th scope="col">Stocks</th>
+            <th scope="col">Image</th>
+            <th scope="col">Offers</th>
+            <th scope="col" colspan="2" class="ml-5">Actions</th>
+
+          </tr>
+        </thead>
+        <tbody>
+        <% for (let i = 0; i < products.length; i++) { %>
+          <% console.log('Category:', products[i].category); %>
+          <tr>
+            <th scope="row"><%= i + 1 %></th>
+            <td><%= products[i].name %></td>
+            <td><%= products[i].category ? products[i].category.name : 'N/A' %></td>
+            <td><%= products[i].price %></td>
+            <td><%= products[i].description %></td>
+            <td><%=products[i].stock%></td>
+            <td>
+              <!-- Single <td> for all images -->
+              <div style="display: flex; flex-wrap: wrap;">
+                <% for (let j = 0; j < products[i].productImages.length; j++) { %>
+                  <img src="/images/product/<%= products[i].productImages[j] %>" alt="Product Image" style="max-width: 50px; max-height: 50px; margin-right: 5px;">
+                <% } %>
+              </div>
+            </td>
+            <td>
+              <% if (products[i].offers && products[i].offers.length > 0) { %>
+                <!-- Display the first offer (you can modify this based on your requirements) -->
+                <span><%= products[i].offers[0].discount %> % off</span><br>
+                <small>Valid until <%= products[i].offers[0].endDate %></small>
+              <% } else { %>
+                <span>No offers available</span>
+              <% } %>
+            </td>
+            <td class="fsd"style="display:flex">
+              <a href="/products/edit-product/<%= products[i]._id %>" class="btn btn-primary">
+                  <i class="fas fa-edit"></i> <!-- Edit Icon -->
+              </a>
+              <a href="/products/delete-product/<%= products[i]._id %>" class="btn btn-danger" onclick="return confirmDelete();">
+                  <i class="fas fa-trash"></i> <!-- Delete Icon -->
+              </a>
+          </td>
+          
+          </tr>
+        <% } %>
+
+        <!-- Add pagination links after the table -->
+<!-- Add pagination links after the table -->
+<div class="container mt-0">
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <li class="page-item <%= i === page ? 'active' : '' %>">
+          <a class="page-link" href="/products/view-products?page=<%= i %>"><%= i %></a>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+</div>
+
+
+
+      </tbody>
+      
+      <script>
+        function confirmDelete() {
+          // Display a confirmation dialog
+          return confirm("Are you sure you want to delete this product?");
+        }
+        </script>
+    </table>
+  </div>
+</section>
+
+</div>
+
+    </body>
+    </html>
+
+
+  
+
+        
+       <!-- Search form -->
+
+    
+
+    <!-- Scripts at the end of the body for faster loading -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
+
+<!-- <style>
+   
+
+@import url("https://use.fontawesome.com/releases/v5.0.11/css/all.css");
+
+.Button {
+height: 50px;
+position: relative;
+background: #ccc;
+padding-top: 10px;
+padding-bottom: 10px;
+padding-left: 0px;
+left: 0px;
+right: 0px;
+width: 100%;
+overflow: hidden;
+}
+
+.nav-side-menu {
+
+overflow: auto;
+font-family: verdana;
+font-size: 12px;
+font-weight: 200;
+background-color: #2e353d;
+position: fixed;
+top: 55px;
+
+padding-left: 0px;
+height: 100%;
+width: 17%;
+color: #e1ffff;
+}
+
+.nav-side-menu .brand {
+background-color: #23282e;
+line-height: 50px;
+display: block;
+text-align: center;
+font-size: 14px;
+}
+.nav-side-menu .toggle-btn {
+display: none;
+}
+.nav-side-menu ul,
+.nav-side-menu li {
+list-style: none;
+padding: 0px;
+margin: 0px;
+line-height: 35px;
+cursor: pointer;
+}
+.nav-side-menu ul :not(collapsed) .arrow:before,
+.nav-side-menu li :not(collapsed) .arrow:before {
+font-family: 'Font Awesome 5 Free';
+content: "\f13a";
+display: inline-block;
+padding-left: 10px;
+padding-right: 10px;
+vertical-align: middle;
+
+font-weight: 900;
+}
+.nav-side-menu ul .active,
+.nav-side-menu li .active {
+border-left: 3px solid #d19b3d;
+background-color: #4f5b69;
+}
+.nav-side-menu ul .sub-menu li.active,
+.nav-side-menu li .sub-menu li.active {
+color: #d19b3d;
+}
+.nav-side-menu ul .sub-menu li.active a,
+.nav-side-menu li .sub-menu li.active a {
+color: #d19b3d;
+}
+.nav-side-menu ul .sub-menu li,
+.nav-side-menu li .sub-menu li {
+background-color: #181c20;
+border: none;
+line-height: 28px;
+border-bottom: 1px solid #23282e;
+margin-left: 0px;
+}
+.nav-side-menu ul .sub-menu li:hover,
+.nav-side-menu li .sub-menu li:hover {
+background-color: #020203;
+}
+.nav-side-menu ul .sub-menu li:before,
+.nav-side-menu li .sub-menu li:before {
+font-family: 'Font Awesome 5 Free';
+content: "\f105";
+display: inline-block;
+padding-left: 10px;
+padding-right: 10px;
+vertical-align: middle;
+font-weight: 900;
+}
+.nav-side-menu li {
+padding-left: 0px;
+border-left: 3px solid #84a3c6;
+border-bottom: 1px solid #23282e;
+}
+.nav-side-menu li a {
+text-decoration: none;
+color: #e1ffff;
+}
+.nav-side-menu li a i {
+padding-left: 10px;
+width: 20px;
+padding-right: 20px;
+}
+.nav-side-menu li:hover {
+border-left: 3px solid #d19b3d;
+background-color: #4f5b69;
+-webkit-transition: all 1s ease;
+-moz-transition: all 1s ease;
+-o-transition: all 1s ease;
+-ms-transition: all 1s ease;
+transition: all 1s ease;
+}
+@media (max-width: 767px) {
+.nav-side-menu {
+position: relative;
+width: 100%;
+margin-bottom: 10px;
+}
+.nav-side-menu .toggle-btn {
+display: block;
+cursor: pointer;
+position: absolute;
+right: 10px;
+top: 10px;
+z-index: 10 !important;
+padding: 3px;
+background-color: #ffffff;
+color: #000;
+width: 40px;
+text-align: center;
+}
+.brand {
+text-align: left !important;
+font-size: 22px;
+padding-left: 20px;
+line-height: 50px !important;
+}
+}
+@media (min-width: 767px) {
+.nav-side-menu .menu-list .menu-content {
+display: block;
+}
+}
+body {
+margin: 0px;
+padding: 0px;
+}
+
+</style> -->
