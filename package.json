@@ -2,9 +2,10 @@
   "name": "e-shop",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "start": "nodemon ./bin/www"
-  },
+ "scripts": {
+  "start": "node ./bin/www",
+  "dev": "nodemon ./bin/www"
+}
   "dependencies": {
     "bcrypt": "^5.1.1",
     "connect-flash": "^0.1.1",
