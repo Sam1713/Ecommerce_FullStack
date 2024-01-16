@@ -2,13 +2,11 @@
   "name": "e-shop",
   "version": "1.0.0",
   "private": true,
-<<<<<<< HEAD
-  "scripts": {
-=======
+
 "scripts": {
->>>>>>> a55968109bab747a570d2d6cf897f4b9defca97f
-    "start": "nodemon ./bin/www"
-  },
+  "start": "nodemon ./bin/www"
+},
+
   "dependencies": {
     "bcrypt": "^5.1.1",
     "connect-flash": "^0.1.1",
