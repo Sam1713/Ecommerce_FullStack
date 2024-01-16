@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include jQuery library from CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- Include jQuery Validation plugin from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<!-- Add these lines in the head section of your HTML file -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- Bootstrap JS Bundle (includes Popper.js) -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+
+    <title>Document</title>
+</head>
+<body>
+
+  
+
+
+  <style>
+    :root {
+--background: rgb(241, 242, 245);
+--text-color: rgba(0, 102, 176, 1);
+--white: rgb(106, 243, 143);
+--user-backhround: rgba(107, 199, 171, 1);
+}
+
+.blue-secondary {
+color: var(--text-color);
+font-size: 1.2rem;
+font-family: Roboto;
+}
+.button-cancel {
+background-color: var(--background) !important;
+}
+
+.add-btn {
+background-color: var(--text-color) !important;
+color: var(--white) !important;
+cursor: pointer !important;
+}
+.text-second {
+color: var(--text-color) !important;
+}
+
+.ladels a {
+text-decoration: none;
+color: var(--text-color);
+}
+.search a {
+color: var(--text-color);
+font-size: 1.5rem;
+}
+
+
+.user-nav {
+position: sticky;
+top: 0;
+z-index: 4;
+background-color: var(--white);
+}
+.search-box {
+background-color: var(--background);
+border-radius: 5px;
+width: 20rem;
+border: none;
+padding: 5px;
+outline: var(--text-color);
+}
+.prof-div {
+z-index: 6;
+right: 4.5rem;
+top: 3rem;
+}
+.account,
+.account a {
+background: var(--user-backhround);
+color: var(--white) !important;
+text-decoration: none !important;
+}
+
+.image-container {
+width: 500px;
+height: 500px;
+position: relative;
+overflow: hidden;
+}
+#primary-img-view {
+width: fit-content;
+min-width: 200px;
+position: absolute;
+left: 50%;
+right: 50%;
+top: 50%;
+transform: translate(-50%, -50%);
+pointer-events: none;
+}
+.add-to-wish-list-btn {
+position: absolute;
+right: 20px;
+top: 20px;
+font-size: 25px;
+z-index: 2;
+}
+.wallet-history {
+max-height: 170px;
+overflow-y: scroll;
+padding: 10px;
+}
+.wallet-history::-webkit-scrollbar {
+width: 7px;
+background-color: rgb(173, 173, 173);
+border-radius: 10px;
+}
+.wallet-history::-webkit-scrollbar-thumb {
+background: #2d6b5e;
+border-radius: 10px;
+}
+</style>
+<nav id="navbar" class="nav user-nav d-flex py-2 justify-content-between align-items-center px-5 mt-0" >
+    <section >
+      <div id="prof-div" style="display: none;" class="divwrapper">
+        <div
+          class="prof-div prof-div card d-flex position-absolute flex-coulumn justify-content-center align-items-center">
+          <div class="account d-flex justify-content-center align-items-center">
+            <span class="h5 px-5 py-1 text-white">
+              Account Details
+            </span>
+          </div>
+          <div class="d-flex flex-column">
+            <div class="blue-secondary px-3 py-2 mt-2">
+              <a style="text-decoration:none; color:#0066B0" href="/user-profile"><i class="fa-solid  fa-user"><span
+                    class="blue-secondary px-2">My Account</span></i></a>
+            </div>
+            <div class="blue-secondary px-3 py-2">
+              <a style="text-decoration:none; color:#0066B0" href="/cart/cart"><i class="fa-solid fa-cart-shopping"><span
+                    class="blue-secondary px-2">My Cart</span></i></a>
+            </div>
+            <div class="blue-secondary px-3 py-2">
+              <a style="text-decoration:none; color:#0066B0" href="/order"><i class="fa-solid fa-bag-shopping"><span
+                    class="blue-secondary px-2">Order history</span></i></a>
+            </div>
+            <div class="blue-secondary px-3 py-2 mb-2">
+              <a style="text-decoration:none; color:#0066B0" href="/my-account/wishlist"><i
+                  class="fa-solid fa-heart"><span class="blue-secondary px-2">My Wish List</span></i></a>
+            </div>
+            <div class="blue-secondary px-3 py-2 mb-2">
+              <form method="GET" action="/logout">
+                <button type="submit"class="ml-auto">Logout</button>
+              </form>
+            </div>
+          </div>
+         
+        </div>
+  
+      </div>
+    </section>
+  
+    <div style="margin-left: -100px;">
+      <a href="/">
+        <img style="width: 3rem;" src="/images/logo/OIP (4).jpg" alt="">
+      </a>
+    </div>
+    
+   
+    <div style="width: 15rem;" class="ladels d-flex justify-content-between align-items-center fw-bold">
+      <a href="/prod">All Products</a>
+      <a href="/products/?&category=Men%20Watches">Mens</a>
+      <a href="/products/?&category=Womens%20Watches">Womens</a>
+    </div>
+    <div style="width: 23rem;" class=" ">
+      <form class="form-inline search d-flex justify-content-between align-items-center">
+        <a id="query" href="/prod/?search="><i onclick="searchProduct()" class="fa-brands fa-searchengin"></i></a>
+        <input id="searchInput" class="search-box px-2 mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      </form>
+    </div>
+    <div style="width:9rem;font-size:1.5rem" class="ladels fw-bold ">
+      <a href="/my-account/wishlist"><i class="fa-solid fa-heart ml-2"></i></a>
+      <a href="/cart"><i class="fa-solid fa-cart-shopping ml-2"><span style="font-size: 0.8rem;" id="cartCount"
+            class="badge bg-success text-white h6 badge-pill"></span></i></a>
+      <a id="btnn" href="#"><i id="#userIcon" class="fa-solid  ml-2 fa-user"></i></a>
+    </div>
+
+  
+  </nav>
+  <script>
+      
+    $(document).ready(function () {
+      $("#btnn").click(function () {
+        $("#prof-div").toggle();
+      });
+    });
+  
+  </script>
+    
+
+<style>
+    .error {
+        color: red;
+    }
+</style>
+<div class="container mt-3">
+    <div class="headind">
+        <p class="h3 fw-bold user-text">Return?</p>
+    </div>
+    <form id="return_form" class="card px-3 py-2 row">
+        <div class="col-md-12">
+            <input class="form-control" type="hidden" id="order_id" name="order_id" value="<%= returnDetails.order_id %>">
+            <input class="form-control" type="hidden" name="product_id" value="<%= returnDetails.product_id %>">
+        </div>
+        <label for="reason" class="fw-bold">Reason for return</label>
+        <select class="col-md-6 form-select" id="reason" name="reason">
+            <option value=""></option>
+            <option value="wrong-item">Wrong Item Received</option>
+            <option value="defective-damaged">Defective or Damaged Product</option>
+            <option value="changed-mind">Changed Mind</option>
+            <option value="size-fit-issue">Size or Fit Issue</option>
+        </select>
+        <label for="comment" class="fw-bold">Comment</label>
+        <textarea name="comment" id="comment" class="col-md-8 form-control" rows="4"></textarea>
+        <div class="button-wrapper mt-2 col-md-6">
+            <input type="submit" class="btn add-btn" value="Send Return Request">
+            <input type="reset" class="btn clear-btn" value="Clear">
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#return_form").validate({
+            rules: {
+                reason: {
+                    required: true
+                },
+                comment: {
+                    required: true
+                }
+            },
+            submitHandler: async function (form) {
+                let order_id = document.getElementById('order_id').value;
+                let formData = new FormData(form);
+                let payload = Object.fromEntries(formData);
+                await fetch('/order/order-return', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.assign(`/order/order-details/${order_id}`);
+                        }
+                    });
+            }
+        });
+    });
+</script>
+</body>
+</html>

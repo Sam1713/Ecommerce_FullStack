@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- Add this in the <head> section -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <title>Document</title>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<link href="https://use.fontawesome.com/releases/v5.0.11/css/all.css" rel="stylesheet">
+</head>
+<body>
+    <%- include('../partials/admin-header.ejs') %>
+
+<div class="container"style="margin-right:40px">
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+      <% const totalPages = Math.ceil(totalCategory / PAGE_SIZE)%>
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <%= i === page ? 'active' : '' %>">
+            <a class="page-link" href="/categories/view-category?page=<%= i %>"style="color:black;background-color:aqua"><%= i %></a>
+          </li>
+        <% } %>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<section style="margin-left:0;margin-top: -30%;display: flex;align-items: center;justify-content: space-between;">
+                 
+                    
+                 
+    <div class="container mt-4 mr-5"style='margin-left:auto;align-items:center;justify-content:center'>
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="text-lg-start">Categories</h2>
+                <% if (msg.length > 0) { %>
+                    <% console.log(msg) %>
+                    <div class="alert alert-danger" id="errorMessage">
+                      <%= msg %>
+                    </div>
+                    <% } %>
+                <a href="/categories/add"class="btn btn-success">Add Category</a>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Category Name</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% categories.forEach((category, index) => { %>
+                            <tr>
+                                <th scope="row"><%= index + 1 %></th>
+                                <td><%= category.name %></td>
+                                <td>
+                                    <a href="/categories/edit-category/<%= category._id %>" class="btn btn-primary">Edit</a>
+                                    <a href="/categories/delete-category/<%= category._id %>" class="btn btn-danger" onclick="return confirmDelete();">Delete</a>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function confirmDelete() {
+        // Display a confirmation dialog
+        return confirm("Are you sure you want to delete this category?");
+    }
+</script>
+
+
+
+    </body>
+    </html>
+
+
+           
+

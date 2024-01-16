@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <!-- Include SweetAlert CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+<!-- Add this to your HTML -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="...">
+
+<!-- Bootstrap JavaScript and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="..."></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="..."></script>
+
+
+<!-- Your other HTML head content -->
+
+<!-- Include SweetAlert JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<!-- Add these lines in the head section of your HTML file -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+  crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+  integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+  <title>Document</title>
+</head>
+
+<body>
+
+
+
+
+      <%- include('../partials/user-header.ejs') %>
+
+  <script>
+
+    $(document).ready(function () {
+      $("#btnn").click(function () {
+        $("#prof-div").toggle();
+      });
+    });
+
+  </script>
+
+  <!-- Navbar -->
+
+
+  <body>
+    <title>Document</title>
+    <div>
+      <% if (msg.length> 0) { %>
+        <% console.log(msg) %>
+          <div class="alert alert-danger" id="successMessage">
+            <%= msg %>
+          </div>
+          <% } %>
+    </div>
+
+    <section class="h-100 h-custom" style="background-color: #d2c9ff;">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-12">
+            <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+              <div class="card-body p-0">
+                <div class="row g-0">
+                  <div class="col-lg-8">
+                    <div class="p-5">
+                      <div class="d-flex justify-content-between align-items-center mb-5">
+                        <h1 class="fw-bold mb-0 text-black">EC-Cart</h1>
+                      </div>
+
+                      <% cart.forEach(item=>{%>
+                        <hr class="my-4">
+
+                        <div class="row mb-4 d-flex justify-content-between align-items-center">
+                          <div class="col-md-2 col-lg-2 col-xl-2">
+                            <% if (item.productId && item.productId.productImages &&
+                              item.productId.productImages.length>
+                              0) { %>
+                              <img src="/images/product/<%= item.productId.productImages[0] %>"
+                                alt="<%= item.productId.name %> Image" class="medium-image"
+                                style="width: 80px; height: 80px;">
+                              <% } else { %>
+                               
+                                <p>Image Not Available</p>
+                                <% } %>
+                          </div>
+                          <div class="col-md-3 col-lg-3 col-xl-3">
+                            <h6 class="text-muted">
+                              <% if (item.productId && item.productId.name) { %>
+                                <h6 class="text-black mb-0">
+                                  <%= item.productId.name %>
+                                </h6>
+                                <% } else { %>
+                                  
+                                  <p>Name Not Available</p>
+                                  <% } %>
+                            </h6>
+                            <h6 class="text-black mb-0">
+                              <% if (item.productId && item.productId.category) { %>
+                                <%= item.productId.category.name|| 'No Category' %>
+                                  <% } else { %>
+                                    No Category
+                                    <% } %>
+                            </h6>
+                          </div>
+                          <div class="col-md-3 col-lg-3 col-xl-2 d-flex"style="margin-left:-4%">
+
+                            <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                              <input type="button" onclick="decrementValue('<%= item.productId._id %>')" value="-" />
+                              <input type="text" name="quantity" value="<%= item.quantity %>" readonly size="1"
+                                class="input-quantity" id="quantityInput-<%=item.productId._id %>" />
+
+
+                              <input type="button" onclick="incrementValue('<%= item.productId._id %>')" value="+" />
+                            </div>
+
+
+
+
+
+                            <script type="text/javascript">
+                              async function updateQuantityAndPrice(productId, quantity) {
+                                try {
+                                  const response = await fetch(`/cart/update-quantity/${productId}/${quantity}`, {
+                                    method: 'GET',
+                                  });
+
+                                  if (response.ok) {
+                                    const data = await response.json();
+                                    if (data.success) {
+                                      // Quantity updated successfully, now update the displayed quantity and price
+                                      updateQuantityAndPriceOnFrontend(productId, quantity, data.cart);
+                                    } else {
+                                      console.error('Failed to update quantity:', data.error);
+                                    }
+                                  } else {
+                                    console.error('Failed to fetch:', response.status);
+                                  }
+                                } catch (error) {
+                                  console.error('Error:', error);
+                                }
+                              }
+
+                              function updateQuantityAndPriceOnFrontend(productId, quantity, cart) {
+                                const cartItem = cart.find(item => item.productId === productId);
+                                const priceElement = document.getElementById(`price_${productId}`);
+
+                                if (cartItem && priceElement) {
+                                  // Update the displayed quantity
+                                  const quantityElement = document.getElementById(productId);
+                                  if (quantityElement) {
+                                    quantityElement.value = quantity;
+                                  }
+
+                                  // Update the displayed price
+                                  priceElement.innerText = '€ ' + (cartItem.productId.price * quantity).toFixed(2);
+                                }
+                              }
+
+                              // function incrementValue(itemId) {
+                              //   var inputElement = document.getElementById(itemId);
+                              //   var value = parseInt(inputElement.value, 10);
+                              //   value = isNaN(value) ? 0 : value;
+                              //   if (value < 10) {
+                              //     value++;
+                              //     inputElement.value = value;
+                              //     updateQuantityAndPrice(itemId, value);
+                              //   }
+                              // }
+
+                              // function decrementValue(itemId) {
+                              //   var inputElement = document.getElementById(itemId);
+                              //   var value = parseInt(inputElement.value, 10);
+                              //   value = isNaN(value) ? 0 : value;
+                              //   if (value > 1) {
+                              //     value--;
+                              //     inputElement.value = value;
+                              //     updateQuantityAndPrice(itemId, value);
+                              //   }
+                              // }
+
+                              incrementValue = async (productID) => {
+
+                                try {
+                                  const response = await fetch(`/cart/add-quantity/${productID}`, {
+                                    method: 'GET'
+                                  });
+
+                                  if (response.ok) {
+                                    const data = await response.json();
+                                    if (data.success) {
+                                      const quantityInput = document.querySelector(`#quantityInput-${productID}`);
+
+                                      const currentQuantity = parseInt(quantityInput.value);
+                                      quantityInput.value = currentQuantity + 1;
+                                      console.log('sdfsdf')
+                                      location.assign('cart');
+                                    } else {
+                                      console.log("error");
+                                    }
+                                  }
+                                } catch (error) {
+                                  console.error(error);
+                                }
+                              };
+
+                              decrementValue = async (productID) => {
+
+                                try {
+                                  const response = await fetch(`/cart/minus-quantity/${productID}`, {
+                                    method: 'GET'
+                                  });
+
+                                  if (response.ok) {
+                                    const data = await response.json();
+                                    if (data.success) {
+                                      const quantityInput = document.querySelector(`#quantityInput-${productID}`);
+
+                                      const currentQuantity = parseInt(quantityInput.value);
+                                      quantityInput.value = currentQuantity + 1;
+                                      location.assign('cart');
+                                    } else {
+                                      console.log("error");
+                                    }
+                                  }
+                                } catch (error) {
+                                  console.error(error);
+                                }
+                              };
+                            </script>
+
+
+
+
+
+
+
+                          </div>
+                          <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                            <!-- Add this line to inspect the entire item object -->
+                            <% console.log('item:', item); %>
+
+                              <h6 class="mb-0">
+                                <% if (item.productId && item.productId.offers && item.productId.offers.length> 0) { %>
+                                  <% const offer=item.productId.offers[0]; %>
+                                    <% if (offer && offer.discountedPrice) { %>
+                                      <h6 class="mb-0"> <%= (offer.discountedPrice * item.quantity).toFixed(2) %>
+                                      </h6>
+                                      <% } else if (item.productId.price) { %>
+                                        <h6 class="mb-0"> <%= (item.productId.price * item.quantity).toFixed(2) %>
+                                        </h6>
+                                        <% } %>
+                                          <% } else if (item.productId && item.productId.price) { %>
+                                            <h6 class="mb-0">€ <%= (item.productId.price * item.quantity).toFixed(2) %>
+                                            </h6>
+                                              <% } else { %>
+                                                <h6 class="mb-0">
+                                                  <p>No price</p>
+                                                </h6>
+                                                <% } %>
+
+                              </h6>
+
+
+                              </h6>
+                          </div>
+
+
+                          <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                            <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                              <a class="text-danger ms-2">
+                                <i style="cursor: pointer;" onclick="removeItem('<%=  item.productId._id%>')"
+                                  class="fa-solid fa-trash"></i>
+                              </a>
+                            </div>
+
+
+
+
+                            <script>
+
+                              const removeItem = async (productID) => {
+                                Swal.fire({
+                                  title: 'Are you sure?',
+                                  text: "You won't be able to revert this!",
+                                  icon: 'warning',
+                                  showCancelButton: true,
+                                  confirmButtonColor: '#3085d6',
+                                  cancelButtonColor: '#d33',
+                                  confirmButtonText: 'Yes, delete it!'
+                                }).then(async (result) => {
+                                  if (result.isConfirmed) {
+                                    try {
+                                      const response = await fetch(`/cart/delete/${productID}`, {
+                                        method: 'DELETE',
+                                      });
+
+                                      if (response.ok) {
+                                        const data = await response.json();
+
+                                        if (data.success) {
+                                          Swal.fire(
+                                            'Deleted!',
+                                            'Your file has been deleted.',
+                                            'success'
+                                          ).then(() => {
+                                            location.assign('/cart/cart');
+                                          });
+                                        } else {
+                                          console.log('Error deleting item');
+                                        }
+                                      } else {
+                                        console.log('Error deleting item');
+                                      }
+                                    } catch (err) {
+                                      console.error(err);
+                                    }
+                                  }
+                                });
+                              }
+                            </script>
+
+
+                          </div>
+                        </div>
+                        <% }) %>
+
+                          <hr class="my-4">
+
+
+                          <hr class="my-4">
+
+                          <div class="pt-5">
+                            <h6 class="mb-0"><a href="/home" class="text-body"><i
+                                  class="fas fa-long-arrow-alt-left me-2"></i>Back to shop</a></h6>
+                          </div>
+                    </div>
+                  
+                  </div>
+                  <div class="col-lg-4 bg-grey">
+                    <div class="p-5">
+                      <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
+                      <hr class="my-4">
+
+                      <div class="d-flex justify-content-between mb-4">
+                        <h5 class="text-uppercase">Total Price</h5>
+                        <h5>
+                          <%= totalPrice.toFixed(2) %>
+                        </h5>
+
+                      </div>
+
+                      <a href="/cart/checkout" type="button"
+                        class="btn user-btn btn-lg btn-block rounded-pill btn-success">
+                        <i class="fas fa-shopping-cart me-2"></i> Go to Checkout
+                      </a>
+
+
+
+
+
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+
+</html>
+
+
+
+<style>
+  @media (min-width: 1025px) {
+    .h-custom {
+      height: 100vh !important;
+    }
+  }
+
+  button {
+    background-color: Blue;
+    /* Green */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+
+
+  .card-registration .select-input.form-control[readonly]:not([disabled]) {
+    font-size: 1rem;
+    line-height: 2.15;
+    padding-left: .75em;
+    padding-right: .75em;
+  }
+
+  .card-registration .select-arrow {
+    top: 13px;
+  }
+
+  .bg-grey {
+    background-color: #eae8e8;
+  }
+
+  @media (min-width: 992px) {
+    .card-registration-2 .bg-grey {
+      border-top-right-radius: 16px;
+      border-bottom-right-radius: 16px;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .card-registration-2 .bg-grey {
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+    }
+  }
+</style>
