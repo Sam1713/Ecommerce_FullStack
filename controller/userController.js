@@ -132,17 +132,19 @@ const signup = async (req, res) => {
       service: 'gmail',
       auth: {
         user: 'samsaju399@gmail.com',
-        pass: 'yrwi nnrp gjtr qits',
+        pass: 'zajw npas kntt mfpt',
       },
+      
     });
-
+    console.log('sdfsdf')
+    
     await transporter.sendMail({
       from: 'samsaju399@gmail.com',
       to: email,
       subject: 'Registration OTP',
       text: `Your OTP for registration is ${otp}`,
     });
-
+   console.log('comeon')
     res.redirect(`/match-otp?email=${encodeURIComponent(email)}`);
   } catch (error) {
     console.error('Error signing up:', error);
