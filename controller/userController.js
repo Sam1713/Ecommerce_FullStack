@@ -44,7 +44,6 @@ const renderLogin = async (req, res) => {
 
 
   if (req.session.user) {
-    // If the user is already logged in, redirect to '/home'
     return res.redirect('/home');
   }
 

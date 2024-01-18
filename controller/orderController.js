@@ -15,7 +15,6 @@ const pdf = require('pdf-creator-node')
 const render_user_orders = async (req, res) => {
 
     let userId = req.session.user._id;
-    console.log('her iam')
     let user_id = new mongoose.Types.ObjectId(userId);
 
     let orderDetails = await Order.aggregate([
@@ -37,7 +36,6 @@ const render_user_orders = async (req, res) => {
             },
         },
     ]);
-    console.log('oder', orderDetails)
     orderDetails = orderDetails.reverse();
     const isHomePage = false
     let arr = [];
@@ -296,7 +294,6 @@ const render_order_details = async (req, res) => {
     };
 
     const get_invoice = async (req, res) => {
-        console.log('dsgfd')
         let product_id = new mongoose.Types.ObjectId(req.query.productId);
         let order_id = new mongoose.Types.ObjectId(req.query.orderId);
         let order = await Order.aggregate([
@@ -387,7 +384,6 @@ const render_order_details = async (req, res) => {
         const html = fs.readFileSync('./views/pdf/invoice.ejs', 'utf8');
 
         const renderedHtml = ejs.render(html, { showOrder, bannerImage: 'public/banners/1704176448562-image.png' });
-        console.log(renderedHtml);
 
         const options = {
             format: 'A4',
@@ -404,7 +400,6 @@ const render_order_details = async (req, res) => {
             },
         };
 
-        console.log('show', showOrder);
 
         const document = {
             html: renderedHtml,
@@ -421,7 +416,6 @@ const render_order_details = async (req, res) => {
 
         pdf.create(document, options).then(() => {
             const pdfStream = fs.createReadStream("invoice.pdf");
-            //    return  res.render('pdf/invoice', { showOrder: showOrder });
             res.setHeader("Content-Type", "application/pdf");
             res.setHeader("Content-Disposition", `attachment; filename=invoice.pdf`);
             pdfStream.pipe(res);
@@ -433,8 +427,7 @@ const render_order_details = async (req, res) => {
                 });
             }, 5000);
         }).catch((error) => {
-            console.error("this is the error", error);
-            res.status(500).send("Error generating the PDF");
+            res.redirect('/error');
         });
     }
     const return_order = async (req, res) => {
@@ -462,7 +455,6 @@ const render_order_details = async (req, res) => {
             status: "pending",
             comment: req.body.comment
         });
-        console.log('re', retrn)
         retrn.save()
             .then((retrn) => {
                 console.log('Return request saved:', retrn);

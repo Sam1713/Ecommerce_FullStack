@@ -11,9 +11,7 @@ const { v4: uuidv4 } = require('uuid');
 
 
 const renderAdminLogin = async (req, res) => {
-    // Set a unique session ID for each admin login
     
-    console.log('/admin/adm-login route handler');
     res.render('admin/adm-login', { msg: req.flash('msg') });
   };
   
@@ -38,12 +36,8 @@ const renderAdminLogin = async (req, res) => {
   
   
 const render_dharboard = async (req, res) => {
-  // const admin = res.locals.admin;4
-//   const log=logged;
-//   console.log('fds',log)
 
 
-  console.log('ads',req.session.adm)
   let sales = await Order.aggregate([
       {
           $match: {
@@ -55,7 +49,6 @@ const render_dharboard = async (req, res) => {
   sales.forEach((sale) => {
       totalRevenew += sale.totalAmount;
   });
-  console.log('total',totalRevenew)
   const currentYear = new Date().getFullYear();
 
   let yearsArray = [];
@@ -64,7 +57,6 @@ const render_dharboard = async (req, res) => {
   }
 
   const custommers = (await User.find({ blocked: false })).length;
-  console.log('keem',custommers)
   const products = (await Product.find({ deleted: false })).length
   try {
       let orders = await Order.aggregate([
@@ -107,7 +99,6 @@ const render_dharboard = async (req, res) => {
               }
           }
       ]);
-   console.log('products',products)
 
       const queryParams = req.query;
 
@@ -195,22 +186,17 @@ const getGraphDetails = async (req, res) => {
           }
       }
   });
-  console.log('mon',monthlyRevenue)
   res.json({
       success: true,
       data: monthlyRevenue
   });
 }
 
-//redirect to dash board
-// const redirect_dash = (req, res) => {
-//   res.redirect('/admin/admin-ho')
-// }
+
 
 
 const renderDashboard = async (req, res) => {
 {
-    console.log('sdgs')
     try {
 
         const PAGE_SIZE = 4;
@@ -256,7 +242,6 @@ const searchUsers = async (req, res) => {
     });
     res.render('admin/dashboard', { users });
   } catch (error) {
-    console.error('Error searching users:', error);
     res.redirect('/admin/dashboard');
   }
 };
@@ -267,7 +252,6 @@ const unblockUser = async (req, res) => {
     await User.findByIdAndUpdate(userId, { blocked: false });
     res.redirect('/admin/dashboard');
   } catch (error) {
-    console.error(error);
     res.send('Error unblocking user');
   }
 };
@@ -283,7 +267,6 @@ const blockUser = async (req, res) => {
   }
 };
 
-// Assuming you have a Stock model
 
 
 
@@ -326,9 +309,7 @@ const get_orders = async (req, res) => {
    
 
   const userId=req.session.userId
-  // const user=await User.findById(userId)
-  // console.log('userD',user)
- console.log('herewrw')
+ 
  let orde = await Order.aggregate([
     {
         $project: {
@@ -346,7 +327,6 @@ const get_orders = async (req, res) => {
     {
         $unwind: { path: '$items' }
     }])
-    console.log('items det',orde)
   let orderDetails = await Order.aggregate([
         {
             $project: {
@@ -410,11 +390,8 @@ const get_orders = async (req, res) => {
             $limit: PAGE_SIZE,
           },
     ]);
-    console.log('orderDetails',orderDetails)
     const user=await User.findById(userId)
-  console.log('userD',user)
 
-// console.log('orere',orderDetails)
   orderDetails.sort((a, b) => {
       const dateA = new Date(a.createdAt);
       const dateB = new Date(b.createdAt);
@@ -432,11 +409,6 @@ const get_orders = async (req, res) => {
       return new Date(date).toLocaleDateString(undefined, options);
   }
 
-//   orderDetails.forEach(obj => {
-//       if (obj.items && obj.items.quantity && obj.items.price) {
-//           obj.items.price = obj.items.quantity * obj.items.price;
-//       }
-//   });
 
 
   
@@ -458,7 +430,6 @@ res.render('admin/orderDetails', {
 const render_change_order_status = async (req, res) => {
   
   
-  console.log('failed')
   // Use the mongoose.Types.ObjectId directly
   let product_id = new mongoose.Types.ObjectId(req.query.productId);
   let order_id = new mongoose.Types.ObjectId(req.query.orderId);
@@ -566,7 +537,6 @@ const render_change_order_status = async (req, res) => {
       showOrder.items.confirmed = false;
   }
 
-  console.log('show',showOrder)
   res.render('admin/orderStatus', { admin: true, showOrder })
 }
 
@@ -588,7 +558,6 @@ const update_order_status = async (req, res) => {
           }
       });
       if (updateOrder) {
-        console.log('success')
           req.flash('success', 'Product status Updated Successfully');
           
           res.redirect('/admin/orders');
@@ -773,13 +742,7 @@ const get_invoice = async (req, res) => {
             }
         }
     ]);
-    console.log('ibvo',)
-
-    // order.forEach(obj => {
-    //     if (obj.items && obj.items.quantity && obj.items.price) {
-    //         obj.items.price = obj.items.quantity * obj.items.price;
-    //     }
-    // });
+    
     order.forEach(obj => {
         if (obj?.createdAt) {
             obj.createdAt = formatDate(obj.createdAt);
