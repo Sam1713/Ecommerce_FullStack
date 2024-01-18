@@ -514,7 +514,8 @@ doc.text(`+91 7736363636`);
 doc.text(`${showOrder.address.locality},${showOrder.address.town}`);
     doc.text(`${showOrder.address.state},${showOrder.address.pincode}`);
     doc.text(`${showOrder.user.email}`);
-    doc.text(`${showOrder.user.phone}`);
+    doc.text(`${showOrder.user.number}`);
+    doc.text(`Payment Method:${showOrder.payment_method}`)
     doc.moveDown();
 doc
       .fontSize(20)
@@ -562,7 +563,7 @@ doc.moveDown(2);
     const feeAndTotalX = 450; // Modify the X position as needed
 
     doc.text(`Shipping fee: 0`, feeAndTotalX, doc.y);
-    doc.text(`Total: ${showOrder.items.price}`, feeAndTotalX, doc.y);
+    doc.text(`Total: ${showOrder.items.price*showOrder.items.quantity}`, feeAndTotalX, doc.y);
 
     doc.end();
   } catch (error) {
