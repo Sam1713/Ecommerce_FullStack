@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 const fs = require('fs')
 const puppeteer = require('puppeteer');
 const ejs = require('ejs');
+const document=require('pdfkit')
+
 
 const Return = require('../models/returnSchema');
 
@@ -450,41 +452,119 @@ const render_order_details = async (req, res) => {
     const randomInvoiceId = generateRandomInvoiceId();
     showOrder.invoiceId = randomInvoiceId;
  
-    const html = await ejs.renderFile('./views/pdf/invoice.ejs', { showOrder });
-    // Render the EJS template
-    const browser = await puppeteer.launch({
-        headless: "new", // Specify the new headless mode
-      });
-      const page = await browser.newPage();
-      await page.setContent(html);
-      await page.pdf({
-        path: './invoice.pdf',
-        format: 'A4',
-        margin: {
-          top: '5mm',
-          right: '0mm',
-          bottom: '5mm',
-          left: '0mm'
-        }
-      });
+    // const html = await ejs.renderFile('./views/pdf/invoice.ejs', { showOrder });
+    // // Render the EJS template
+    // const browser = await puppeteer.launch({
+    //     headless: "new", // Specify the new headless mode
+    //   });
+    //   const page = await browser.newPage();
+    //   await page.setContent(html);
+    //   await page.pdf({
+    //     path: './invoice.pdf',
+    //     format: 'A4',
+    //     margin: {
+    //       top: '5mm',
+    //       right: '0mm',
+    //       bottom: '5mm',
+    //       left: '0mm'
+    //     }
+    //   });
   
-      // Close the browser
-      await browser.close();
+    //   // Close the browser
+    //   await browser.close();
 
-    // Stream the generated PDF as a response
-    const pdfStream = fs.createReadStream('./invoice.pdf');
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename=invoice.pdf`);
-    pdfStream.pipe(res);
+    // // Stream the generated PDF as a response
+    // const pdfStream = fs.createReadStream('./invoice.pdf');
+    // res.setHeader('Content-Type', 'application/pdf');
+    // res.setHeader('Content-Disposition', `attachment; filename=invoice.pdf`);
+    // pdfStream.pipe(res);
 
-    // Cleanup: Delete the generated PDF after 5 seconds
-    setTimeout(() => {
-      fs.unlink('./invoice.pdf', (err) => {
-        if (err) {
-          console.error(err.message);
-        }
+    // // Cleanup: Delete the generated PDF after 5 seconds
+    // setTimeout(() => {
+    //   fs.unlink('./invoice.pdf', (err) => {
+    //     if (err) {
+    //       console.error(err.message);
+    //     }
+    //   });
+    // }, 5000);
+    const doc = new document();
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="invoice.pdf"`);
+
+    doc.pipe(res);
+
+    doc.fontSize(20).fillColor("purple").text(`INVOICE`, { align: "center" });
+    doc.fontSize(12).fillColor("black").text(` `, { continued: true });
+    doc.moveDown();
+
+    doc.text(`eCart Invoice: ${showOrder.invoiceId}`);
+    doc.text(`Sold by: eCart`);
+    doc.text(`EC-Shop.com`);
+doc.text(`+91 7736363636`);
+    doc.moveDown();
+
+    doc.fontSize(20).fillColor("purple").text(`Billed To:`);
+    doc.fontSize(12).fillColor("black").text(` `, { continued: true });
+    doc.text(`${showOrder.user.name}`);
+    doc.text(
+      `${showOrder.address.house_name}(H),${showOrder.address.area_street}`
+    );
+
+doc.text(`${showOrder.address.locality},${showOrder.address.town}`);
+    doc.text(`${showOrder.address.state},${showOrder.address.pincode}`);
+    doc.text(`${showOrder.user.email}`);
+    doc.text(`${showOrder.user.phone}`);
+    doc.moveDown();
+doc
+      .fontSize(20)
+      .fillColor("purple")
+      .text(`Order Summary`, { align: "center" });
+    // doc.fontSize(13).fillColor("black").text(` `, { continued: true });
+    doc.moveDown();
+const tableHeaders = ["No.", "Item", "Price", "Quantity"];
+
+    // Table data (using showOrder as an example, modify as needed)
+    const tableData = [
+      {
+        no: "01",
+        item: showOrder.product.name,
+        price: showOrder.items.price,
+        quantity: showOrder.items.quantity,
+      },
+      // Add more rows as needed
+    ];
+
+const startX = 50;
+    let startY = doc.y + 10; // Start the table below the Order Summary text
+
+    // Set the column width for the table
+    const colWidth = 140;
+// Print table headers
+    doc.fontSize(12).fillColor("red");
+    tableHeaders.forEach((header, index) => {
+      doc.text(header, startX + index * colWidth, startY);
+    });
+// Print table data
+    doc.fontSize(12).fillColor("black");
+    startY += 20; // Move down a bit for data
+    tableData.forEach((row, rowIndex) => {
+      Object.values(row).forEach((cell, colIndex) => {
+        doc.text(
+          cell.toString(),
+          startX + colIndex * colWidth,
+          startY + rowIndex * 20
+        );
       });
-    }, 5000);
+    });
+doc.moveDown(2);
+
+    const feeAndTotalX = 450; // Modify the X position as needed
+
+    doc.text(`Shipping fee: 0`, feeAndTotalX, doc.y);
+    doc.text(`Total: ${showOrder.items.price}`, feeAndTotalX, doc.y);
+
+    doc.end();
   } catch (error) {
     console.error(error);
     res.redirect('/error');
