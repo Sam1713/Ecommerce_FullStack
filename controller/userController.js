@@ -298,7 +298,7 @@ const sendOtpForPassword = async (req, res) => {
       service: 'gmail',
       auth: {
         user: 'samsaju399@gmail.com',
-        pass: 'yrwi nnrp gjtr qits',
+        pass: 'zajw npas kntt mfpt',
       },
     });
 
