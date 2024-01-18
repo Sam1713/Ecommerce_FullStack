@@ -763,7 +763,7 @@ const get_invoice = async (req, res) => {
     }
     const randomInvoiceId = generateRandomInvoiceId();
     showOrder.invoiceId = randomInvoiceId;
-    res.render('pdf/invoice', { admin: true, showOrder, Admin: admin })
+    res.render('pdf/invoice', {showOrder })
 }
 
 
