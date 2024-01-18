@@ -6,10 +6,10 @@ const Order = require('../models/orderModel')
 const Swal = require('sweetalert')
 const mongoose = require('mongoose');
 const fs = require('fs')
+const puppeteer = require('puppeteer');
 const ejs = require('ejs');
 
 const Return = require('../models/returnSchema');
-const pdf = require('pdf-creator-node')
 
 
 const render_user_orders = async (req, res) => {
@@ -294,6 +294,7 @@ const render_order_details = async (req, res) => {
     };
 
     const get_invoice = async (req, res) => {
+        try{
         let product_id = new mongoose.Types.ObjectId(req.query.productId);
         let order_id = new mongoose.Types.ObjectId(req.query.orderId);
         let order = await Order.aggregate([
@@ -367,69 +368,131 @@ const render_order_details = async (req, res) => {
             return new Date(date).toLocaleDateString(undefined, options);
         }
 
-        let productIdToFind = req.query.productId
+    //     let productIdToFind = req.query.productId
 
-        const showOrder = order.find(order => order.items.product_id.toString() === productIdToFind);
+    //     const showOrder = order.find(order => order.items.product_id.toString() === productIdToFind);
 
-        function generateRandomInvoiceId() {
-            let id = showOrder.items.product_id.toString().slice(3, 10);
-            const invoiceId = `INV-${id}`;
-            return invoiceId;
-        }
-        const randomInvoiceId = generateRandomInvoiceId();
-        showOrder.invoiceId = randomInvoiceId;
+    //     function generateRandomInvoiceId() {
+    //         let id = showOrder.items.product_id.toString().slice(3, 10);
+    //         const invoiceId = `INV-${id}`;
+    //         return invoiceId;
+    //     }
+    //     const randomInvoiceId = generateRandomInvoiceId();
+    //     showOrder.invoiceId = randomInvoiceId;
 
-        // download pdf
+    //     // download pdf
 
-        const html = fs.readFileSync('./views/pdf/invoice.ejs', 'utf8');
+    //     const html = fs.readFileSync('./views/pdf/invoice.ejs', 'utf8');
 
-        const renderedHtml = ejs.render(html, { showOrder, bannerImage: 'public/banners/1704176448562-image.png' });
+    //     const renderedHtml = ejs.render(html, { showOrder});
 
-        const options = {
-            format: 'A4',
-            orientation: 'portrait',
-            border: '600mm',
-            header: {
-                height: '5mm',
-                contents: '<div style="text-align: center;">INVOICE</div>',
-            },
-            childProcessOptions: {
-                env: {
-                    OPENSSL_CONF: '/dev/null',
-                },
-            },
-        };
-
-
-        const document = {
-            html: renderedHtml,
-            data: {
-                showOrder: showOrder,
-
-            },
-            path: './invoice.pdf',
-            type: '',
-        };
+    //     const options = {
+    //         format: 'A4',
+    //         orientation: 'portrait',
+    //         border: '600mm',
+    //         header: {
+    //             height: '5mm',
+    //             contents: '<div style="text-align: center;">INVOICE</div>',
+    //         },
+    //         childProcessOptions: {
+    //             env: {
+    //                 OPENSSL_CONF: '/dev/null',
+    //             },
+    //         },
+    //     };
 
 
-        console.log('doc', document)
+    //     const document = {
+    //         html: renderedHtml,
+    //         data: {
+    //             showOrder: showOrder,
 
-        pdf.create(document, options).then(() => {
-            const pdfStream = fs.createReadStream("invoice.pdf");
-            res.setHeader("Content-Type", "application/pdf");
-            res.setHeader("Content-Disposition", `attachment; filename=invoice.pdf`);
-            pdfStream.pipe(res);
-            setTimeout(() => {
-                fs.unlink('./invoice.pdf', (err) => {
-                    if (err) {
-                        throw new Error(err.message);
-                    }
-                });
-            }, 5000);
-        }).catch((error) => {
-            res.redirect('/error');
-        });
+    //         },
+    //         path: './invoice.pdf',
+    //         type: '',
+    //     };
+
+
+    //     console.log('doc', document)
+
+    //     pdf.create(document, options).then(() => {
+    //         const pdfStream = fs.createReadStream("invoice.pdf");
+    //         res.setHeader("Content-Type", "application/pdf");
+    //         res.setHeader("Content-Disposition", `attachment; filename=invoice.pdf`);
+    //         pdfStream.pipe(res);
+    //         setTimeout(() => {
+    //             fs.unlink('./invoice.pdf', (err) => {
+    //                 if (err) {
+    //                     throw new Error(err.message);
+    //                 }
+    //             });
+    //         }, 5000);
+    //     }).catch((error) => {
+    //         res.redirect('/error');
+    //     });
+    // }
+    let productIdToFind = req.query.productId;
+    const showOrder = order.find(order => order.items.product_id.toString() === productIdToFind);
+
+    // Function to format date
+    function formatDate(date) {
+      const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+      return new Date(date).toLocaleDateString(undefined, options);
     }
+
+    // Function to generate a random invoice ID
+    function generateRandomInvoiceId() {
+      let id = showOrder.items.product_id.toString().slice(3, 10);
+      const invoiceId = `INV-${id}`;
+      return invoiceId;
+    }
+
+    const randomInvoiceId = generateRandomInvoiceId();
+    showOrder.invoiceId = randomInvoiceId;
+ 
+    const html = await ejs.renderFile('./views/pdf/invoice.ejs', { showOrder });
+    // Render the EJS template
+    const browser = await puppeteer.launch({
+        headless: "new", // Specify the new headless mode
+      });
+      const page = await browser.newPage();
+      await page.setContent(html);
+      await page.pdf({
+        path: './invoice.pdf',
+        format: 'A4',
+        margin: {
+          top: '5mm',
+          right: '0mm',
+          bottom: '5mm',
+          left: '0mm'
+        }
+      });
+  
+      // Close the browser
+      await browser.close();
+
+    // Stream the generated PDF as a response
+    const pdfStream = fs.createReadStream('./invoice.pdf');
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=invoice.pdf`);
+    pdfStream.pipe(res);
+
+    // Cleanup: Delete the generated PDF after 5 seconds
+    setTimeout(() => {
+      fs.unlink('./invoice.pdf', (err) => {
+        if (err) {
+          console.error(err.message);
+        }
+      });
+    }, 5000);
+  } catch (error) {
+    console.error(error);
+    res.redirect('/error');
+  }
+}
+
+
+
     const return_order = async (req, res) => {
         let orderId = req.query.order_id;
         let product_id = req.query.product_id;
@@ -439,14 +502,14 @@ const render_order_details = async (req, res) => {
             product_id: product_id,
             user_id: user_id
         }
-        res.render('user/return', { user: true, User: true, returnDetails });
+        const isHomePage=false
+        res.render('user/return', { isHomePage,user: true, User: true, returnDetails });
     }
 
     // retun request post
     const order_return = async (req, res) => {
         let user_id = new mongoose.Types.ObjectId(req.session.user._id);
-        console.log('hai')
-        console.log('userId', user_id)
+      
         let retrn = new Return({
             order_id: req.body.order_id,
             user_id: user_id,

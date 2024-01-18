@@ -7,7 +7,6 @@ const mongoose = require('mongoose');
 const Return = require('../models/returnSchema');
 const { logged } = require('../auth/userAuth');
 const session = require('express-session');
-const { v4: uuidv4 } = require('uuid');
 
 
 const renderAdminLogin = async (req, res) => {
@@ -680,7 +679,6 @@ const declineRequest = async (req, res) => {
   }
 }
 const get_invoice = async (req, res) => {
-    let admin = res.locals.admin;
     let product_id = new mongoose.Types.ObjectId(req.query.productId);
     let order_id = new mongoose.Types.ObjectId(req.query.orderId);
     let order = await Order.aggregate([

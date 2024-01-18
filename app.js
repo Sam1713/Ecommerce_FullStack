@@ -15,7 +15,6 @@ const { MongoClient } = require('mongodb')
 const MongoStore = require('connect-mongo')
 const nodemailer = require("nodemailer");
 
-const Razorpay = require('razorpay');
 
 
 // eslint-disable-next-line no-unused-vars
