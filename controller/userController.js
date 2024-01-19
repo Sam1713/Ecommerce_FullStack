@@ -269,7 +269,7 @@ const logout = async (req, res) => {
      delete req.session.user;
       
     }
-    res.redirect('/login');
+    res.redirect('/');
   } catch (error) {
     res.redirect('/error');
   }
