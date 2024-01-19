@@ -31,7 +31,7 @@ const upload = multer({ storage: storage });
 
 router.get('/error',userController.error)
 
-router.get('/login',isLoggedIn,userController.renderLogin);
+router.get('/',isLoggedIn,userController.renderLogin);
 
 router.post('/login', userController.login);
 
