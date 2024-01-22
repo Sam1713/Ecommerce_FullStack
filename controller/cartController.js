@@ -29,7 +29,7 @@ const showCart = async (req, res) => {
       if (usr.blocked === true) {
         console.log('welcome');
         req.flash('errorMessage', `Sorry ${use.name},Your account has been blocked`);
-        return res.redirect('/login'); 
+        return res.redirect('/'); 
       }
     }
 
@@ -77,7 +77,7 @@ const addToCart = async (req, res) => {
 
       if (usr.blocked === true) {
         req.flash('errorMessage', `Sorry ${use.name},Your account has been blocked`);
-        return res.redirect('/login'); // Add return here to end the function
+        return res.redirect('/'); // Add return here to end the function
       }
     }
     const userId = req.params.userId;
@@ -159,12 +159,10 @@ const incrementQuantity = async (req, res) => {
     let quantity = currentQuantity.quantity;
 
     if (quantity >= currentStock) {
-      
-       req.flash('errorMessage', 'Sorry,The item is out of stock');
-  
-        console.log('working')
-        return res.redirect('/cart/cart');
-      
+      return res.json({
+        status: false,
+        message: 'Out of stock',
+      });
     } else {
       const updated = await User.updateOne(
         {
@@ -195,31 +193,54 @@ const incrementQuantity = async (req, res) => {
 
 
 const decrementQuantity = async (req, res) => {
-  let userID = req.session.user._id;
-  const productId = req.params.productId;
-  let user = await User.findOne({ _id: userID });
-  const currentQuantity = user.cart.find((item) => item.productId == productId);
-  let quantity = currentQuantity.quantity;
+  try {
+    let userID = req.session.user._id;
+    const productId = req.params.productId;
+    let user = await User.findOne({ _id: userID });
 
-  const updated = await User.updateOne(
-    {
-      _id: userID,
-      "cart.productId": productId,
-    },
-    {
-      $inc: {
-        "cart.$.quantity": -1,
-      },
+    const currentQuantity = user.cart.find((item) => item.productId == productId);
+
+    if (!currentQuantity) {
+      return res.json({
+        success: false,
+        message: 'Product not found in cart',
+      });
     }
-  );
 
-  if (updated) {
+    let quantity = currentQuantity.quantity;
+
+    // Check if the current quantity is already 1
+    if (quantity <= 1) {
+      return res.json({
+        success: false,
+        message: 'Minimum quantity is 1',
+      });
+    }
+
+    const updated = await User.updateOne(
+      {
+        _id: userID,
+        'cart.productId': productId,
+      },
+      {
+        $inc: {
+          'cart.$.quantity': -1,
+        },
+      }
+    );
+
+    if (updated) {
+      res.json({
+        success: true,
+      });
+    }
+  } catch (error) {
     res.json({
-      success: true,
+      success: false,
+      message: 'Internal Server Error',
     });
   }
-
-}
+};
 
 
 const removeItem = async (req, res) => {
@@ -270,12 +291,16 @@ const render_checkout = async (req, res) => {
 
       sellingPrice.push(sellingprice);
     }
-
+    
     let totalAmount = 0;
     for (let i = 0; i < sellingPrice.length; i++) {
       totalAmount += parseInt(sellingPrice[i].discountedPrice || sellingPrice[i].price, 10) * user.cart[i].quantity;
     }
-
+    let fullPrice=0
+    for (let i = 0; i < sellingPrice.length; i++) {
+       fullPrice += parseInt(sellingPrice[i].discountedPrice || sellingPrice[i].price, 10) * user.cart[i].quantity;
+    }
+    
     let coupens = await Coupen.aggregate([{
       $match: {
         start_date: { $lte: new Date() },
@@ -316,12 +341,14 @@ const render_checkout = async (req, res) => {
       const coupen = await Coupen.findOne({ _id: req.query.coupen });
       if (coupen.min_amount <= total) {
         let discount = coupen.discount;
+        let dis=totalAmount * discount / 100
 
         totalAmount = totalAmount - (totalAmount * discount / 100);
 
         return res.json({
           success: true,
           total: totalAmount,
+          dis:dis,
           coupen_id: coupen._id,
           discount: coupen.discount,
           coupen_code: coupen.coupon_code
@@ -335,7 +362,7 @@ const render_checkout = async (req, res) => {
     }
     const isHomePage = false
 
-    res.render('user/checkout', { userData: req.session.user, coupens, wallet, address, cart: user.cart, totalAmount, offerPrice,isHomePage });
+    res.render('user/checkout', { userData: req.session.user, coupens, wallet, address,fullPrice, cart: user.cart, totalAmount, offerPrice,isHomePage });
   } catch (error) {
     res.redirect('/error');
   }
@@ -473,35 +500,43 @@ const placeOrder = async (req, res) => {
       }
     } else if (req.body.payment_method === 'wallet') {
       const createOrder = await Order.create(order);
+  
       if (createOrder) {
-        const user = req.session.user;
-
-        await User.updateOne({ _id: user._id }, { $unset: { cart: '' } });
-
-        const priceValue = parseInt(req.body.price);
-        const userWalletValue = user && user.user_wallet !== undefined ? parseInt(user.user_wallet) : 0;
-
-        if (!isNaN(userWalletValue)) {
-        } else {
-          console.error('Invalid user_wallet value:', user.user_wallet);
-        }
-        const newHistoryItem = {
-          amount: parseInt(req.body.price),
-          status: "Debit",
-          time: Date.now(),
-        };
-
-        const updatedUser = await User.findByIdAndUpdate(
-          { _id: user._id },
-          { $push: { wallet_history: newHistoryItem } },
-          { new: true }
-        );
-
-        res.json({
-          success: true
-        });
+          const user = req.session.user;
+  
+          await User.updateOne({ _id: user._id }, { $unset: { cart: '' } });
+  
+          const priceValue = parseInt(req.body.price);
+          console.log('price', priceValue);
+  
+          // Update user's wallet
+          await User.updateOne({ _id: user._id }, { $set: { user_wallet: parseInt(user.user_wallet) - priceValue } });
+  
+          // Push the new history item
+          const newHistoryItem = {
+              amount: priceValue,
+              status: "Debit",
+              time: Date.now(),
+          };
+  
+          await User.findByIdAndUpdate(
+              { _id: user._id },
+              { $push: { wallet_history: newHistoryItem } },
+              { new: true }
+          );
+  
+          // Fetch the updated user after wallet update
+          const updatedUser = await User.findById(user._id);
+  
+          // Update session user with the latest information
+          req.session.user = updatedUser;
+  
+          res.json({
+              success: true,
+          });
       }
-    } else {
+  }
+   else {
       const createOrder = await Order.create(order);
       let total = parseInt(req.body.price);
       let orderId = createOrder._id;

@@ -14,24 +14,24 @@ const setCommonHeaders = (req, res, next) => {
     // res.setHeader('Another-Header', 'header-value');
     next();
   };
-  const { isLoggedIn } = require('../auth/userAuth');
+  const { isLoggedIn,block } = require('../auth/userAuth');
   // Use the middleware for all routes
   router.use(setCommonHeaders);
 
 
 
 
-router.get('/order/:id',isLoggedIn,setCommonHeaders,orderController.render_user_orders);
+router.get('/order/:id',isLoggedIn,block,setCommonHeaders,orderController.render_user_orders);
 
-router.get('/',isLoggedIn,setCommonHeaders,orderController.render_orders)
+router.get('/',isLoggedIn,block,setCommonHeaders,orderController.render_orders)
 
-router.get('/order-details/:id',isLoggedIn,orderController.render_order_details);
+router.get('/order-details/:id',isLoggedIn,block,orderController.render_order_details);
 
 router.get('/cancel_order/:product_id/:order_id',isLoggedIn, orderController.cancel_order);
 
-router.get('/get-invoice',  orderController.get_invoice);
+router.get('/get-invoice',block,  orderController.get_invoice);
 
-router.get('/return-order', isLoggedIn,setCommonHeaders, orderController.return_order);
+router.get('/return-order', isLoggedIn,block,setCommonHeaders, orderController.return_order);
 
 router.post('/order-return', isLoggedIn,setCommonHeaders, orderController.order_return);
 

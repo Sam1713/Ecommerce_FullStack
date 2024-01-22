@@ -30,11 +30,7 @@ const userSchema = new mongoose.Schema({
     },
   ],
 
-user_wallet: {
-  type: Number,
-  required: true,
-  default: 0,
-},
+
 user_wallet: {
   type: Number,
   required: true,

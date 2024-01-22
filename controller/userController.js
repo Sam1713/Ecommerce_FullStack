@@ -61,7 +61,7 @@ const login = async (req, res) => {
       if (user.blocked) {
         console.log(user);
         req.flash('errorMessage', 'Sorry, your account has been blocked');
-        return res.redirect('/login');
+        return res.redirect('/');
       } else {
       
         // Set session user
@@ -75,10 +75,10 @@ const login = async (req, res) => {
       }
     } else if (!user) {
       req.flash('errorMessage', 'Email is not valid');
-      return res.redirect('/login');
+      return res.redirect('/');
     } else if (user.password != password) {
       req.flash('errorMessage', 'Password is not valid');
-      return res.redirect('/login');
+      return res.redirect('/');
     }
   } catch (error) {
     console.error('Error logging in:', error);
@@ -191,7 +191,10 @@ const matchOTP = async (req, res) => {
       await newUser.save();
 
       delete otpStorage[email];
-      res.json(`${email} is successfully registered`);
+      req.flash('successMessage', 'Your account has been successfully registered');
+      return res.redirect('/');
+      
+
     } else {
       console.log('Entered OTP does not match Stored OTP');
 
@@ -210,6 +213,7 @@ const renderHome = async (req, res) => {
    // Number of products per page
 
     if (req.session.user) {
+      
       const user = req.session.user;
       const email = user.email;
       const usr = await User.findOne({ email });
@@ -512,10 +516,10 @@ const newPassword = async (req, res) => {
       storedData.password = hashedPassword;
       await storedData.save();
       req.flash('successMessage', `password changed successfully`);
-      return res.redirect('/login');
+      return res.redirect('/');
 
       // Redirect to the login page after a successful password update
-      return res.redirect('/login');
+      // return res.redirect('/login');
     }
 
     res.status(404).send('User not found');
@@ -540,8 +544,12 @@ const calculateQuantity = (req) => {
 const renderProductDetail = async (req, res) => {
   try {
     if (req.session.user) {
+
       const user = req.session.user;
+      console.log('user',user)
       const productId = req.params.id;
+     
+
       const selectedQuantity = calculateQuantity(req);
 
       if (!mongoose.Types.ObjectId.isValid(productId)) {
@@ -591,9 +599,10 @@ const renderProductDetail = async (req, res) => {
         offerEndDate,
       });
     } else {
-      res.redirect('/login');
+      res.redirect('/');
     }
   } catch (error) {
+    console.log(error)
     res.redirect('/error');
   }
 };
@@ -604,8 +613,15 @@ const renderProductDetail = async (req, res) => {
 const renderUse = async (req, res) => {
   try {
     if (req.session.user) {
+
        
       const user = req.session.user;
+      
+      if (user.blocked==true) {
+        console.log('welcome');
+        req.flash('errorMessage', `Sorry ${user.name},Your account has been blocked`);
+        return res.redirect('/'); // Add return here to end the function
+      }
       const productId = req.params.id;  // Get the productId
    
 
@@ -615,7 +631,7 @@ const renderUse = async (req, res) => {
       res.render('user/prod-detail', { user, productId, msg:req.flash('errorMessage')   });
     } else {
       console.log('User not logged in. Redirecting to login.');
-      res.redirect('/login');
+      res.redirect('/');
     }
   } catch (error) {
     console.error('Error in renderUse:', error);
@@ -637,7 +653,7 @@ const renderUserProfile = async (req, res) => {
       if (usr.blocked === true) {
         console.log('welcome');
         req.flash('errorMessage', `Sorry ${use.name},Your account has been blocked`);
-        return res.redirect('/login'); // Add return here to end the function
+        return res.redirect('/'); // Add return here to end the function
       }
     }
     const userId = req.session.user;
@@ -897,10 +913,7 @@ const delete_address = async (req, res) => {
 
 const wallet=async(req,res)=>{
   const user=req.session.user
-  if (user.wallet_history.length > 0) {
-    user.wallet_history.reverse();
-
-}
+ 
 const isHomePage=false
 res.render('user/user_wallet',{user,isHomePage})
 }

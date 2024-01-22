@@ -2,8 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controller/userController');
-const { isLoggedIn } = require('../auth/userAuth');
 const { disableCache } = require('../controller/adminController');
+const { isLoggedIn,block} = require('../auth/userAuth');
+
 const multer = require('multer');
 const path = require('path');
 
@@ -69,12 +70,12 @@ router.get('/otp-verify',  userController.renderOTPVerify);
 
 
 
-router.get('/user/prod-detail/:id',isLoggedIn,setCommonHeaders, userController.renderProductDetail);
+router.get('/user/prod-detail/:id',isLoggedIn,block,setCommonHeaders,userController.renderProductDetail);
 
 router.get('/use/:id',isLoggedIn,setCommonHeaders, userController.renderUse);
 
 
-router.get('/user-profile',isLoggedIn,setCommonHeaders,userController.renderUserProfile)
+router.get('/user-profile',isLoggedIn,block,setCommonHeaders,userController.renderUserProfile)
 
 
 router.get('/user-profile-edit/:userId',isLoggedIn,setCommonHeaders,userController.renderEditUser)
@@ -83,19 +84,19 @@ router.post('/user-profile-edit/:userId', isLoggedIn, userController.updateUser)
 
 router.post('/profile/update/image/:userId', userController.upload.single('profileImage'), userController.updateProfileImage);
 
-router.get('/my-address/',isLoggedIn,setCommonHeaders,userController.render_Address)
+router.get('/my-address/',isLoggedIn,block,setCommonHeaders,userController.render_Address)
 
 router.post('/my-address/new-address',userController.add_new_address);
 
 router.post('/checkout/new-address',userController.add_new_address_checkout);
 
-router.get('/my-address/edit-address/:id',isLoggedIn,setCommonHeaders,userController.render_edit_address)
+router.get('/my-address/edit-address/:id',isLoggedIn,block,setCommonHeaders,userController.render_edit_address)
 
 router.post('/my-address/update-address/:id',userController.update_user_address);
 
 router.delete('/my-address/delete/:id', userController.delete_address);
 
-router.get('/wallet',isLoggedIn,setCommonHeaders,userController.wallet)
+router.get('/wallet',isLoggedIn,block,setCommonHeaders,userController.wallet)
 
 
 

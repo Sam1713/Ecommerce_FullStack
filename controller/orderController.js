@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const fs = require('fs')
 const puppeteer = require('puppeteer');
 const ejs = require('ejs');
-const document=require('pdfkit')
+const document = require('pdfkit')
 
 
 const Return = require('../models/returnSchema');
@@ -83,7 +83,7 @@ const render_orders = async (req, res) => {
     ]);
     orderDetails = orderDetails;
     const isHomePage = false
-   
+
     orderDetails = orderDetails.reverse();
     let arr = [];
     for (let i = 1; i < orderDetails.length / 4 + 1; i++) {
@@ -109,7 +109,7 @@ const render_order_details = async (req, res) => {
 
         let order_id = new mongoose.Types.ObjectId(req.params.id);
 
-        
+
         let orderDetails = await Order.aggregate([
             {
                 $match: {
@@ -224,28 +224,31 @@ const render_order_details = async (req, res) => {
     } catch (error) {
         console.error('Error fetching order details:', error);
         res.redirect('/error');
-    }}
-    const cancel_order = async (req, res) => {
-        try {
-            const order_id = new mongoose.Types.ObjectId(req.params.order_id);
-            const product_id = new mongoose.Types.ObjectId(req.params.product_id);
+    }
+}
+const cancel_order = async (req, res) => {
+    try {
+        const order_id = new mongoose.Types.ObjectId(req.params.order_id);
+        const product_id = new mongoose.Types.ObjectId(req.params.product_id);
 
-            const canceledOrder = await Order.findOneAndUpdate(
-                { _id: order_id, 'items.product_id': product_id },
-                {
-                    $set: {
-                        'items.$.status': 'cancelled',
-                        status: 'cancelled', // Set the order status to 'cancelled'
-                    },
+        const canceledOrder = await Order.findOneAndUpdate(
+            { _id: order_id, 'items.product_id': product_id },
+            {
+                $set: {
+                    'items.$.status': 'cancelled',
+                    status: 'cancelled', // Set the order status to 'cancelled'
                 },
-                { new: true }
-            );
+            },
+            { new: true }
+        );
+        console.log('cance', canceledOrder)
 
-            if (!canceledOrder) {
-                return res.json({ success: false, message: 'Order not found' });
-            }
+        if (!canceledOrder) {
+            return res.json({ success: false, message: 'Order not found' });
+        }
 
-            for (const item of canceledOrder.items) {
+        for (const item of canceledOrder.items) {
+            if (item.product_id.equals(product_id)) {
                 // Find the product related to the canceled item
                 const product = await Product.findById(item.product_id);
 
@@ -254,49 +257,54 @@ const render_order_details = async (req, res) => {
 
                 // Save the updated product in the database
                 await product.save();
+
+                const user_id = canceledOrder.customer_id; // Change this line based on your actual schema
+
+                if (canceledOrder.payment_method === 'Online Payment' || canceledOrder.payment_method === 'wallet') {
+                    console.log('payme', canceledOrder.payment_method)
+
+                    // Update user's wallet
+                    const walletAmount = item.price ;
+
+                    console.log('dfs', walletAmount)
+                    const updatedUser = await User.findByIdAndUpdate(
+                        { _id: user_id },
+                        { $inc: { user_wallet: walletAmount } },
+                        { new: true }
+                    );
+
+                    // Marking in wallet history
+                    const newHistoryItem = {
+                        amount: walletAmount,
+                        status: "Credit",
+                        time: Date.now(),
+                    };
+
+                    // Push the new wallet history item
+                    await User.findByIdAndUpdate(
+                        { _id: user_id },
+                        { $push: { wallet_history: newHistoryItem } }
+                    );
+
+                    // Update session user
+                    req.session.user = updatedUser;
+                    await req.session.save();
+                }
             }
-
-            const user_id = canceledOrder.customer_id; // Change this line based on your actual schema
-
-            if (canceledOrder.payment_method === 'Online Payment' || canceledOrder.payment_method === 'wallet') {
-                console.log('payme', canceledOrder.payment_method)
-                const walletAmount = canceledOrder.items.reduce((total, item) => total + item.price, 0);
-                console.log('dfs', walletAmount)
-
-                // Update user's wallet
-                const updatedUser = await User.findByIdAndUpdate(
-                    { _id: user_id },
-                    { $inc: { user_wallet: walletAmount } },
-                    { new: true }
-                );
-
-                // Marking in wallet history
-                const newHistoryItem = {
-                    amount: walletAmount,
-                    status: "Credit",
-                    time: Date.now(),
-                };
-
-                // Push the new wallet history item
-                await User.findByIdAndUpdate(
-                    { _id: user_id },
-                    { $push: { wallet_history: newHistoryItem } }
-                );
-            }
-
-            // Save the updated order
-            await canceledOrder.save();
-
-
-            res.json({ success: true, message: 'Order cancelled successfully', order: canceledOrder });
-        } catch (error) {
-            console.error('Error cancelling order:', error);
-            res.json({ success: false, message: 'Internal Server Error', error: error.message });
         }
-    };
 
-    const get_invoice = async (req, res) => {
-        try{
+        // Save the updated order
+        await canceledOrder.save();
+
+        res.json({ success: true, message: 'Order cancelled successfully', order: canceledOrder });
+    } catch (error) {
+        console.error('Error cancelling order:', error);
+        res.json({ success: false, message: 'Internal Server Error', error: error.message });
+    }
+};
+
+const get_invoice = async (req, res) => {
+    try {
         let product_id = new mongoose.Types.ObjectId(req.query.productId);
         let order_id = new mongoose.Types.ObjectId(req.query.orderId);
         let order = await Order.aggregate([
@@ -358,7 +366,7 @@ const render_order_details = async (req, res) => {
                 }
             }
         ]);
-        
+
         order.forEach(obj => {
             if (obj?.createdAt) {
                 obj.createdAt = formatDate(obj.createdAt);
@@ -370,251 +378,251 @@ const render_order_details = async (req, res) => {
             return new Date(date).toLocaleDateString(undefined, options);
         }
 
-    //     let productIdToFind = req.query.productId
+        //     let productIdToFind = req.query.productId
 
-    //     const showOrder = order.find(order => order.items.product_id.toString() === productIdToFind);
+        //     const showOrder = order.find(order => order.items.product_id.toString() === productIdToFind);
 
-    //     function generateRandomInvoiceId() {
-    //         let id = showOrder.items.product_id.toString().slice(3, 10);
-    //         const invoiceId = `INV-${id}`;
-    //         return invoiceId;
-    //     }
-    //     const randomInvoiceId = generateRandomInvoiceId();
-    //     showOrder.invoiceId = randomInvoiceId;
+        //     function generateRandomInvoiceId() {
+        //         let id = showOrder.items.product_id.toString().slice(3, 10);
+        //         const invoiceId = `INV-${id}`;
+        //         return invoiceId;
+        //     }
+        //     const randomInvoiceId = generateRandomInvoiceId();
+        //     showOrder.invoiceId = randomInvoiceId;
 
-    //     // download pdf
+        //     // download pdf
 
-    //     const html = fs.readFileSync('./views/pdf/invoice.ejs', 'utf8');
+        //     const html = fs.readFileSync('./views/pdf/invoice.ejs', 'utf8');
 
-    //     const renderedHtml = ejs.render(html, { showOrder});
+        //     const renderedHtml = ejs.render(html, { showOrder});
 
-    //     const options = {
-    //         format: 'A4',
-    //         orientation: 'portrait',
-    //         border: '600mm',
-    //         header: {
-    //             height: '5mm',
-    //             contents: '<div style="text-align: center;">INVOICE</div>',
-    //         },
-    //         childProcessOptions: {
-    //             env: {
-    //                 OPENSSL_CONF: '/dev/null',
-    //             },
-    //         },
-    //     };
-
-
-    //     const document = {
-    //         html: renderedHtml,
-    //         data: {
-    //             showOrder: showOrder,
-
-    //         },
-    //         path: './invoice.pdf',
-    //         type: '',
-    //     };
+        //     const options = {
+        //         format: 'A4',
+        //         orientation: 'portrait',
+        //         border: '600mm',
+        //         header: {
+        //             height: '5mm',
+        //             contents: '<div style="text-align: center;">INVOICE</div>',
+        //         },
+        //         childProcessOptions: {
+        //             env: {
+        //                 OPENSSL_CONF: '/dev/null',
+        //             },
+        //         },
+        //     };
 
 
-    //     console.log('doc', document)
+        //     const document = {
+        //         html: renderedHtml,
+        //         data: {
+        //             showOrder: showOrder,
 
-    //     pdf.create(document, options).then(() => {
-    //         const pdfStream = fs.createReadStream("invoice.pdf");
-    //         res.setHeader("Content-Type", "application/pdf");
-    //         res.setHeader("Content-Disposition", `attachment; filename=invoice.pdf`);
-    //         pdfStream.pipe(res);
-    //         setTimeout(() => {
-    //             fs.unlink('./invoice.pdf', (err) => {
-    //                 if (err) {
-    //                     throw new Error(err.message);
-    //                 }
-    //             });
-    //         }, 5000);
-    //     }).catch((error) => {
-    //         res.redirect('/error');
-    //     });
-    // }
-    let productIdToFind = req.query.productId;
-    const showOrder = order.find(order => order.items.product_id.toString() === productIdToFind);
+        //         },
+        //         path: './invoice.pdf',
+        //         type: '',
+        //     };
 
-    // Function to format date
-    function formatDate(date) {
-      const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-      return new Date(date).toLocaleDateString(undefined, options);
-    }
 
-    // Function to generate a random invoice ID
-    function generateRandomInvoiceId() {
-      let id = showOrder.items.product_id.toString().slice(3, 10);
-      const invoiceId = `INV-${id}`;
-      return invoiceId;
-    }
+        //     console.log('doc', document)
 
-    const randomInvoiceId = generateRandomInvoiceId();
-    showOrder.invoiceId = randomInvoiceId;
- 
-    // const html = await ejs.renderFile('./views/pdf/invoice.ejs', { showOrder });
-    // // Render the EJS template
-    // const browser = await puppeteer.launch({
-    //     headless: "new", // Specify the new headless mode
-    //   });
-    //   const page = await browser.newPage();
-    //   await page.setContent(html);
-    //   await page.pdf({
-    //     path: './invoice.pdf',
-    //     format: 'A4',
-    //     margin: {
-    //       top: '5mm',
-    //       right: '0mm',
-    //       bottom: '5mm',
-    //       left: '0mm'
-    //     }
-    //   });
-  
-    //   // Close the browser
-    //   await browser.close();
+        //     pdf.create(document, options).then(() => {
+        //         const pdfStream = fs.createReadStream("invoice.pdf");
+        //         res.setHeader("Content-Type", "application/pdf");
+        //         res.setHeader("Content-Disposition", `attachment; filename=invoice.pdf`);
+        //         pdfStream.pipe(res);
+        //         setTimeout(() => {
+        //             fs.unlink('./invoice.pdf', (err) => {
+        //                 if (err) {
+        //                     throw new Error(err.message);
+        //                 }
+        //             });
+        //         }, 5000);
+        //     }).catch((error) => {
+        //         res.redirect('/error');
+        //     });
+        // }
+        let productIdToFind = req.query.productId;
+        const showOrder = order.find(order => order.items.product_id.toString() === productIdToFind);
 
-    // // Stream the generated PDF as a response
-    // const pdfStream = fs.createReadStream('./invoice.pdf');
-    // res.setHeader('Content-Type', 'application/pdf');
-    // res.setHeader('Content-Disposition', `attachment; filename=invoice.pdf`);
-    // pdfStream.pipe(res);
+        // Function to format date
+        function formatDate(date) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            return new Date(date).toLocaleDateString(undefined, options);
+        }
 
-    // // Cleanup: Delete the generated PDF after 5 seconds
-    // setTimeout(() => {
-    //   fs.unlink('./invoice.pdf', (err) => {
-    //     if (err) {
-    //       console.error(err.message);
-    //     }
-    //   });
-    // }, 5000);
-    const doc = new document();
+        // Function to generate a random invoice ID
+        function generateRandomInvoiceId() {
+            let id = showOrder.items.product_id.toString().slice(3, 10);
+            const invoiceId = `INV-${id}`;
+            return invoiceId;
+        }
 
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `attachment; filename="invoice.pdf"`);
+        const randomInvoiceId = generateRandomInvoiceId();
+        showOrder.invoiceId = randomInvoiceId;
 
-    doc.pipe(res);
+        // const html = await ejs.renderFile('./views/pdf/invoice.ejs', { showOrder });
+        // // Render the EJS template
+        // const browser = await puppeteer.launch({
+        //     headless: "new", // Specify the new headless mode
+        //   });
+        //   const page = await browser.newPage();
+        //   await page.setContent(html);
+        //   await page.pdf({
+        //     path: './invoice.pdf',
+        //     format: 'A4',
+        //     margin: {
+        //       top: '5mm',
+        //       right: '0mm',
+        //       bottom: '5mm',
+        //       left: '0mm'
+        //     }
+        //   });
 
-    doc.fontSize(20).fillColor("purple").text(`INVOICE`, { align: "center" });
-    doc.fontSize(12).fillColor("black").text(` `, { continued: true });
-    doc.moveDown();
+        //   // Close the browser
+        //   await browser.close();
 
-    doc.text(`eCart Invoice: ${showOrder.invoiceId}`);
-    doc.text(`Sold by: eCart`);
-    doc.text(`EC-Shop.com`);
-doc.text(`+91 7736363636`);
-    doc.moveDown();
+        // // Stream the generated PDF as a response
+        // const pdfStream = fs.createReadStream('./invoice.pdf');
+        // res.setHeader('Content-Type', 'application/pdf');
+        // res.setHeader('Content-Disposition', `attachment; filename=invoice.pdf`);
+        // pdfStream.pipe(res);
 
-    doc.fontSize(20).fillColor("purple").text(`Billed To:`);
-    doc.fontSize(12).fillColor("black").text(` `, { continued: true });
-    doc.text(`${showOrder.user.name}`);
-    doc.text(
-      `${showOrder.address.house_name}(H),${showOrder.address.area_street}`
-    );
+        // // Cleanup: Delete the generated PDF after 5 seconds
+        // setTimeout(() => {
+        //   fs.unlink('./invoice.pdf', (err) => {
+        //     if (err) {
+        //       console.error(err.message);
+        //     }
+        //   });
+        // }, 5000);
+        const doc = new document();
 
-doc.text(`${showOrder.address.locality},${showOrder.address.town}`);
-    doc.text(`${showOrder.address.state},${showOrder.address.pincode}`);
-    doc.text(`${showOrder.user.email}`);
-    doc.text(`${showOrder.user.number}`);
-    doc.text(`Payment Method:${showOrder.payment_method}`)
-    doc.moveDown();
-doc
-      .fontSize(20)
-      .fillColor("purple")
-      .text(`Order Summary`, { align: "center" });
-    // doc.fontSize(13).fillColor("black").text(` `, { continued: true });
-    doc.moveDown();
-const tableHeaders = ["No.", "Item", "Price", "Quantity"];
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", `attachment; filename="invoice.pdf"`);
 
-    // Table data (using showOrder as an example, modify as needed)
-    const tableData = [
-      {
-        no: "01",
-        item: showOrder.product.name,
-        price: showOrder.items.price,
-        quantity: showOrder.items.quantity,
-      },
-      // Add more rows as needed
-    ];
+        doc.pipe(res);
 
-const startX = 50;
-    let startY = doc.y + 10; // Start the table below the Order Summary text
+        doc.fontSize(20).fillColor("purple").text(`INVOICE`, { align: "center" });
+        doc.fontSize(12).fillColor("black").text(` `, { continued: true });
+        doc.moveDown();
 
-    // Set the column width for the table
-    const colWidth = 140;
-// Print table headers
-    doc.fontSize(12).fillColor("red");
-    tableHeaders.forEach((header, index) => {
-      doc.text(header, startX + index * colWidth, startY);
-    });
-// Print table data
-    doc.fontSize(12).fillColor("black");
-    startY += 20; // Move down a bit for data
-    tableData.forEach((row, rowIndex) => {
-      Object.values(row).forEach((cell, colIndex) => {
+        doc.text(`eCart Invoice: ${showOrder.invoiceId}`);
+        doc.text(`Sold by: eCart`);
+        doc.text(`EC-Shop.com`);
+        doc.text(`+91 7736363636`);
+        doc.moveDown();
+
+        doc.fontSize(20).fillColor("purple").text(`Billed To:`);
+        doc.fontSize(12).fillColor("black").text(` `, { continued: true });
+        doc.text(`${showOrder.user.name}`);
         doc.text(
-          cell.toString(),
-          startX + colIndex * colWidth,
-          startY + rowIndex * 20
+            `${showOrder.address.house_name}(H),${showOrder.address.area_street}`
         );
-      });
-    });
-doc.moveDown(2);
 
-    const feeAndTotalX = 450; // Modify the X position as needed
+        doc.text(`${showOrder.address.locality},${showOrder.address.town}`);
+        doc.text(`${showOrder.address.state},${showOrder.address.pincode}`);
+        doc.text(`${showOrder.user.email}`);
+        doc.text(`${showOrder.user.number}`);
+        doc.text(`Payment Method:${showOrder.payment_method}`)
+        doc.moveDown();
+        doc
+            .fontSize(20)
+            .fillColor("purple")
+            .text(`Order Summary`, { align: "center" });
+        // doc.fontSize(13).fillColor("black").text(` `, { continued: true });
+        doc.moveDown();
+        const tableHeaders = ["No.", "Item", "Price", "Quantity"];
 
-    doc.text(`Shipping fee: 0`, feeAndTotalX, doc.y);
-    doc.text(`Total: ${showOrder.items.price*showOrder.items.quantity}`, feeAndTotalX, doc.y);
+        // Table data (using showOrder as an example, modify as needed)
+        const tableData = [
+            {
+                no: "01",
+                item: showOrder.product.name,
+                price: showOrder.items.price,
+                quantity: showOrder.items.quantity,
+            },
+            // Add more rows as needed
+        ];
 
-    doc.end();
-  } catch (error) {
-    console.error(error);
-    res.redirect('/error');
-  }
+        const startX = 50;
+        let startY = doc.y + 10; // Start the table below the Order Summary text
+
+        // Set the column width for the table
+        const colWidth = 140;
+        // Print table headers
+        doc.fontSize(12).fillColor("red");
+        tableHeaders.forEach((header, index) => {
+            doc.text(header, startX + index * colWidth, startY);
+        });
+        // Print table data
+        doc.fontSize(12).fillColor("black");
+        startY += 20; // Move down a bit for data
+        tableData.forEach((row, rowIndex) => {
+            Object.values(row).forEach((cell, colIndex) => {
+                doc.text(
+                    cell.toString(),
+                    startX + colIndex * colWidth,
+                    startY + rowIndex * 20
+                );
+            });
+        });
+        doc.moveDown(2);
+
+        const feeAndTotalX = 450; // Modify the X position as needed
+
+        doc.text(`Shipping fee: 0`, feeAndTotalX, doc.y);
+        doc.text(`Total: ${showOrder.items.price * showOrder.items.quantity}`, feeAndTotalX, doc.y);
+
+        doc.end();
+    } catch (error) {
+        console.error(error);
+        res.redirect('/error');
+    }
 }
 
 
 
-    const return_order = async (req, res) => {
-        let orderId = req.query.order_id;
-        let product_id = req.query.product_id;
-        let user_id = req.session.user._id;
-        let returnDetails = {
-            order_id: orderId,
-            product_id: product_id,
-            user_id: user_id
-        }
-        const isHomePage=false
-        res.render('user/return', { isHomePage,user: true, User: true, returnDetails });
+const return_order = async (req, res) => {
+    let orderId = req.query.order_id;
+    let product_id = req.query.product_id;
+    let user_id = req.session.user._id;
+    let returnDetails = {
+        order_id: orderId,
+        product_id: product_id,
+        user_id: user_id
     }
+    const isHomePage = false
+    res.render('user/return', { isHomePage, user: true, User: true, returnDetails });
+}
 
-    // retun request post
-    const order_return = async (req, res) => {
-        let user_id = new mongoose.Types.ObjectId(req.session.user._id);
-      
-        let retrn = new Return({
-            order_id: req.body.order_id,
-            user_id: user_id,
-            product_id: req.body.product_id,
-            reason: req.body.reason,
-            status: "pending",
-            comment: req.body.comment
+// retun request post
+const order_return = async (req, res) => {
+    let user_id = new mongoose.Types.ObjectId(req.session.user._id);
+
+    let retrn = new Return({
+        order_id: req.body.order_id,
+        user_id: user_id,
+        product_id: req.body.product_id,
+        reason: req.body.reason,
+        status: "pending",
+        comment: req.body.comment
+    });
+    retrn.save()
+        .then((retrn) => {
+            console.log('Return request saved:', retrn);
         });
-        retrn.save()
-            .then((retrn) => {
-                console.log('Return request saved:', retrn);
-            });
-        res.json({
-            success: true
-        });
+    res.json({
+        success: true
+    });
 
-    }
+}
 
-    module.exports = {
-        render_orders,
-        render_user_orders,
-        render_order_details,
-        cancel_order,
-        get_invoice,
-        return_order,
-        order_return
-    }
+module.exports = {
+    render_orders,
+    render_user_orders,
+    render_order_details,
+    cancel_order,
+    get_invoice,
+    return_order,
+    order_return
+}

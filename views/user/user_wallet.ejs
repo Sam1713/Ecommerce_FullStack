@@ -101,22 +101,23 @@ crossorigin="anonymous"></script>
           </div>
   
           <div id="walletHistory" class="collapse">
-            <div class="card-body" style="height: 400px; overflow-y:scroll;">
+            <div class="card-body" style="height: 400px; overflow-y: scroll;">
               <div class="card-title h5 mt-2 user-text text-center fw-bold">Wallet History</div>
               <div class="bg-secondary" style="height: 2px;"></div>
               <% if (user.wallet_history.length > 0) { %>
                 <% user.wallet_history.forEach(history => { %>
                   <div class="card bg-light mt-2 d-flex flex-row justify-content-between align-items-center">
                     <div class="fw-normal"><%= toDateAndTime(history.time) %></div>
-                    <% if (history.status) { %>
-                      <div class="fw-bold text-danger"><%= history.status %></div>
+                    <% if (history.status === "Debit") { %>
+                      <div class="fw-bold text-danger" style="color: red;"><%= history.status %></div>
                       <div class="fw-bold text-danger">₹<%= history.amount %></div>
-                    <% } else { %>
-                      <div class="fw-bold text-success"><%= history.status %></div>
+                    <% } else if (history.status === "Credit") { %>
+                      <div class="fw-bold text-success" style="color: green;"><%= history.status %></div>
                       <div class="fw-bold text-success">₹<%= history.amount %></div>
                     <% } %>
                   </div>
                 <% }); %>
+          
               <% } else { %>
                 <div class="alert alert-info text-center mt-3" role="alert">
                   Wallet history is empty.

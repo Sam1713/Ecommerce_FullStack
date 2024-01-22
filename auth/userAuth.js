@@ -56,7 +56,7 @@ const { v4: uuidv4 } = require('uuid');
 // };
 exports.isLoggedIn=(req,res,next)=>{
   if(req.session.user){
-    console.log('ud',req.session.user)
+    // console.log('ud',req.session.user)
   
     next()
   }else{
@@ -65,28 +65,29 @@ exports.isLoggedIn=(req,res,next)=>{
    
     
     // Pass errorMessage to the template
+  }}
+
+  // auth/userAuth.js
+
+exports.block = async (req, res, next) => {
+  if (req.session.user) {
+    const user = req.session.user;
+    const userD = await User.findById(user._id);
+    if (userD.blocked) {
+      console.log('welcome');
+      req.flash('errorMessage', `Sorry ${user.name}, your account has been blocked`);
+      delete req.session.user
+      return res.redirect('/');
+       // Add return here to end the function
+    }
   }
-
-  exports.blocked=async (req,res,next)=>{
-    if (req.session.user) {
-      
-      const user = req.session.user;
-      const email = user.email;
-      const usr = await User.findOne({ email });
-
-      if (usr.blocked === true) {
-        console.log('welcome');
-        req.flash('errorMessage', `Sorry ${user.name},Your account has been blocked`);
-        return res.redirect('/login'); // Add return here to end the function
-      }
-  }else{
-    next()
-  }
-  }
-  }
+  // Call next() to proceed to the next middleware or route handler
+  next();
+};
 
 
-
+  
+  
 exports.logged = (req, res, next) => {
   if (req.session.adm) {
    
