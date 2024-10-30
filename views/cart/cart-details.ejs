@@ -157,137 +157,169 @@
           <% } %>
                             </div>
 
-                            <script type="text/javascript">
-                              async function updateQuantityAndPrice(productId, quantity) {
-                                try {
-                                  const response = await fetch(`/cart/update-quantity/${productId}/${quantity}`, {
-                                    method: 'GET',
-                                  });
+                            <script>
+//                               const updateQuantityAndPriceOnFrontend = (productId, quantity, cartItem) => {
+//                                 console.log('item',cartItem.productId.price)
+//   const priceElement = $(`#price_${productId}`);
+//   console.log('Product ID:', productId);
+//   console.log('Price Element:', priceElement);
 
-                                  if (response.ok) {
-                                    const data = await response.json();
-                                    if (data.success) {
-                                      // Quantity updated successfully, now update the displayed quantity and price
-                                      updateQuantityAndPriceOnFrontend(productId, quantity, data.cart);
-                                    } else {
-                                      console.error('Failed to update quantity:', data.error);
-                                    }
-                                  } else {
-                                    console.error('Failed to fetch:', response.status);
-                                  }
-                                } catch (error) {
-                                  console.error('Error:', error);
-                                }
-                              }
+//   // Check if the priceElement exists
+//   if (priceElement.length === 0) {
+//     console.error(`Price element not found for product ID: ${productId}`);
+//     return;
+//   }
 
-                              function updateQuantityAndPriceOnFrontend(productId, quantity, cart) {
-                                const cartItem = cart.find(item => item.productId === productId);
-                                const priceElement = document.getElementById(`price_${productId}`);
+//   // Update the displayed quantity
+//   const quantityElement = $(`#${productId}`);
+//   if (quantityElement.length) {
+//     quantityElement.val(quantity);
+//   }
 
-                                if (cartItem && priceElement) {
-                                  // Update the displayed quantity
-                                  const quantityElement = document.getElementById(productId);
-                                  if (quantityElement) {
-                                    quantityElement.value = quantity;
-                                  }
+//   // Update the displayed price without page refresh
+//   if (cartItem && priceElement) {
+//     const updatedPrice = (cartItem.productId.price * cartItem.quantity).toFixed(2);
+//     console.log('Updated Price:', updatedPrice);
+//     priceElement.text('€ ' + updatedPrice);
+//   }
+// };
 
-                                  // Update the displayed price
-                                  priceElement.innerText = '€ ' + (cartItem.productId.price * quantity).toFixed(2);
-                                }
-                              }
 
-                              // function incrementValue(itemId) {
-                              //   var inputElement = document.getElementById(itemId);
-                              //   var value = parseInt(inputElement.value, 10);
-                              //   value = isNaN(value) ? 0 : value;
-                              //   if (value < 10) {
-                              //     value++;
-                              //     inputElement.value = value;
-                              //     updateQuantityAndPrice(itemId, value);
-                              //   }
-                              // }
 
-                              // function decrementValue(itemId) {
-                              //   var inputElement = document.getElementById(itemId);
-                              //   var value = parseInt(inputElement.value, 10);
-                              //   value = isNaN(value) ? 0 : value;
-                              //   if (value > 1) {
-                              //     value--;
-                              //     inputElement.value = value;
-                              //     updateQuantityAndPrice(itemId, value);
-                              //   }
-                              // }
+// const updateQuantityAndPrice = (productId, quantity) => {
+//   $.ajax({
+//     url: `/cart/update-quantity/${productId}/${quantity}`,
+//     method: 'GET',
+//     dataType: 'json',
+//     success: (data) => {
+      
+//   console.log('Received cartItem:', data.cartItem);
+//       if (data.success) {
+//         // Quantity updated successfully, now update the displayed quantity and price
+//         updateQuantityAndPriceOnFrontend(productId, quantity, data.cartItem);
+//       } else {
+//         console.error('Failed to update quantity:', data.error);
+//       }
+//     },
+//     error: (error) => {
+//       console.error('Error:', error);
+//     },
+//   });
+// };
+// Add this function to your script
+const updateQuantityAndPriceOnFrontend = (productId, newQuantity, cartItem) => {
+  console.log('Updating quantity and price:', productId, newQuantity, cartItem);
 
-                              const incrementValue = async (productID) => {
+  // Assuming you have an element to display the quantity, update it accordingly
+  const quantityInput = $(`#quantityInput-${productId}`);
+  console.log('in',quantityInput)
+  quantityInput.val(newQuantity);
+
+  // Assuming you have an element to display the price, update it accordingly
+  const priceElementId = `price-${productId}`;
+  console.log('eek',priceElementId)
+  let priceElement = $(`#${priceElementId.price}`);
+  console.log('er',priceElement)
+  
+  // Check if the priceElement exists, if not, create it
+  if (priceElement.length === 0) {
+    // Create the price element and append it where needed
+    priceElement = $('<div>').attr('id', priceElementId);
+    $('#container-for-prices').append(priceElement); // Replace 'container-for-prices' with the actual container ID or selector
+  }
+
+  const totalPrice = cartItem.productId.price * newQuantity; // Calculate the new total price
+  priceElement.text(`€ ${totalPrice.toFixed(2)}`);
+};
+
+
+
+const incrementValue = (productID) => {
   try {
-    const response = await fetch(`/cart/add-quantity/${productID}`, {
+    $.ajax({
+      url: `/cart/add-quantity/${productID}`,
       method: 'GET',
+      dataType: 'json',
+      success: (data) => {
+        if (data.success) {
+          const quantityInput = $(`#quantityInput-${productID}`);
+          const currentQuantity = parseInt(quantityInput.val());
+          quantityInput.val(currentQuantity + 1);
+
+          // Log the values for debugging
+          console.log('Current Quantity:', currentQuantity);
+          console.log('Data:', data);
+
+          // Update the displayed price without page refresh
+          setTimeout(() => {
+            updateQuantityAndPriceOnFrontend(productID, currentQuantity + 1, data.cartItem);
+          }, 100); // Adjust the delay as needed
+
+          console.log('Quantity incremented successfully');
+        } else {
+          // Handle errors
+          console.log('Data:', data);
+          console.log('Status:', data.status);
+          console.log('Message:', data.message);
+
+          if (data.status === false && data.message.toLowerCase().includes('out of stock')) {
+            console.log('Out of stock condition met');
+            Swal.fire({
+              title: 'Out of Stock',
+              text: 'Sorry, the item is out of stock.',
+              icon: 'error',
+            });
+          } else {
+            console.log('Error:', data.message);
+          }
+        }
+      },
+      error: (error) => {
+        console.error(error);
+      },
     });
-
-    if (response.ok) {
-      const data = await response.json();
-      if (data.success) {
-        const quantityInput = document.querySelector(`#quantityInput-${productID}`);
-        const currentQuantity = parseInt(quantityInput.value);
-        quantityInput.value = currentQuantity + 1;
-        console.log('Quantity incremented successfully');
-        location.assign('cart');
-      } else {
-        // Check if the response includes an out of stock message
-        console.log('Data:', data);
-console.log('Status:', data.status);
-console.log('Message:', data.message);
-
-if (data.status === false && data.message.toLowerCase().includes('out of stock')) {
-  console.log('Out of stock condition met');
-  Swal.fire({
-    title: 'Out of Stock',
-    text: 'Sorry, the item is out of stock.',
-    icon: 'error',
-  });
-} else {
-  console.log('Error:', data.message);
-}
-
-      }
-    }
   } catch (error) {
     console.error(error);
   }
 };
 
 
-decrementValue = async (productID) => {
-  const quantityInput = document.querySelector(`#quantityInput-${productID}`);
-  const currentQuantity = parseInt(quantityInput.value);
 
-  // Check if the current quantity is greater than 1
+const decrementValue = (productID) => {
+  const quantityInput = $(`#quantityInput-${productID}`);
+  const currentQuantity = parseInt(quantityInput.val());
+
   if (currentQuantity > 1) {
     try {
-      const response = await fetch(`/cart/minus-quantity/${productID}`, {
+      $.ajax({
+        url: `/cart/minus-quantity/${productID}`,
         method: 'GET',
-      });
+        dataType: 'json',
+        success: (data) => {
+          if (data.success) {
+            quantityInput.val(currentQuantity - 1);
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          // Decrease the quantity in the input field
-          quantityInput.value = currentQuantity - 1;
-          location.assign('cart');
-        } else {
-          // Display a SweetAlert error message
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'There was an error while updating the quantity!',
-          });
-        }
-      }
+            // Update the displayed price without page refresh
+            updateQuantityAndPriceOnFrontend(productID, currentQuantity - 1, data.cartItem);
+
+            console.log('Quantity decremented successfully');
+          } else {
+            // Handle errors
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'There was an error while updating the quantity!',
+            });
+          }
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
     } catch (error) {
       console.error(error);
     }
   } else {
-    // Display a SweetAlert message indicating the minimum quantity is 1
     Swal.fire({
       icon: 'info',
       title: 'Info',
@@ -295,8 +327,7 @@ decrementValue = async (productID) => {
     });
   }
 };
-
-                            </script>
+</script>
 
 
 
@@ -307,9 +338,9 @@ decrementValue = async (productID) => {
                           </div>
                           <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
                             <!-- Add this line to inspect the entire item object -->
-                            <% console.log('item:', item); %>
 
                               <h6 class="mb-0">
+                                
                                 <% if (item.productId && item.productId.offers && item.productId.offers.length> 0) { %>
                                   <% const offer=item.productId.offers[0]; %>
                                     <% if (offer && offer.discountedPrice) { %>

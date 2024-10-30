@@ -38,7 +38,7 @@ const showCart = async (req, res) => {
       path: 'cart.productId',
       populate: { path: 'category', model: 'Category' },
     });
-
+  //  console.log('user kkk',user)
     if (!user) {
       return res.json({ error: 'User not found' });
     }
@@ -91,10 +91,11 @@ const addToCart = async (req, res) => {
       req.flash('errorMessage', 'Sorry,The item is out of stock');
 
       return res.redirect('/home');
-      // Redirect to an appropriate page
+      // Redirect to an home page
     }
     // Find the user by ID and populate the cart with product details
     const user = await User.findById(userId).populate('cart.productId');
+    console.log('dssdf',user)
 
     if (!user) {
       return res.json({ error: 'User not found' });
@@ -176,11 +177,20 @@ const incrementQuantity = async (req, res) => {
         }
       );
 
-      if (updated) {
-        res.json({
-          success: true,
-        });
-      }
+      
+    if (updated) {
+      const updatedUser = await User.findOne({ _id: userID });
+      const updatedCartItem = updatedUser.cart.find((item) => item.productId == productId);
+
+      // Ensure the cartItem object includes productId and necessary information
+      const productInfo = await Product.findOne({ _id: productId });
+      updatedCartItem.productId = productInfo; // Add the product information to the cartItem
+
+      res.json({
+        success: true,
+        cartItem: updatedCartItem,
+      });
+    }
     }
   } catch (error) {
     res.json({
@@ -388,7 +398,7 @@ const placeOrder = async (req, res) => {
       path: 'cart.productId',
       model: 'Product',
     });
-   
+   console.log('userdata',userData)
 
     const cartList = userData.cart.map((cartItem) => {
       const product = cartItem.productId;
